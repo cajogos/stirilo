@@ -1,6 +1,6 @@
 # Phase 2a: Persistence & Config
 
-**Status:** Not started
+**Status:** Done
 **Depends on:** Phase 1
 **PRD reference:** Milestone 2 (split), Implementation Order steps 4-5
 
@@ -22,18 +22,18 @@ Real persistence and validated configuration: a Drizzle-managed SQLite database 
 
 ## Deliverables
 
-- [ ] SQLite connection + Drizzle schema + migrations
-- [ ] `settings` table
-- [ ] Zod-validated env config loader (fail-fast at startup)
-- [ ] `pnpm db:generate` / `pnpm db:migrate` / `pnpm db:studio` wired up
-- [ ] `:memory:` database used in tests
+- [x] SQLite connection + Drizzle schema + migrations
+- [x] `settings` table
+- [x] Zod-validated env config loader (fail-fast at startup)
+- [x] `pnpm db:generate` / `pnpm db:migrate` / `pnpm db:studio` wired up
+- [x] `:memory:` database used in tests
 
 ## Acceptance criteria
 
-- [ ] Migrations create the schema on a fresh DB
-- [ ] App fails fast with a clear message on missing/invalid env config
-- [ ] Tests run against in-memory SQLite
-- [ ] Config validation has unit tests
+- [x] Migrations create the schema on a fresh DB
+- [x] App fails fast with a clear message on missing/invalid env config
+- [x] Tests run against in-memory SQLite
+- [x] Config validation has unit tests
 
 ## Recommendations / Watch-outs
 
@@ -46,20 +46,20 @@ Real persistence and validated configuration: a Drizzle-managed SQLite database 
 
 ## Implementation Checklist
 
-1. [ ] Create `packages/db` with a `better-sqlite3` + Drizzle connection
-2. [ ] Mark `better-sqlite3` external in the Next.js config
-3. [ ] Define the `settings` table schema
-4. [ ] Set up drizzle-kit migrations; wire `db:generate` / `db:migrate` / `db:studio`
-5. [ ] Add `:memory:` database support for tests
-6. [ ] Add the Zod env config loader (fail-fast at startup)
-7. [ ] Write unit tests for config validation
+1. [x] Create `packages/db` with a `better-sqlite3` + Drizzle connection
+2. [x] Mark `better-sqlite3` external in the Next.js config
+3. [x] Define the `settings` table schema
+4. [x] Set up drizzle-kit migrations; wire `db:generate` / `db:migrate` / `db:studio`
+5. [x] Add `:memory:` database support for tests
+6. [x] Add the Zod env config loader (fail-fast at startup)
+7. [x] Write unit tests for config validation
 
 ## Done
 
 Mark this phase complete only when all of the following hold:
 
-- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
-- [ ] **Verify:** `pnpm db:generate && pnpm db:migrate && pnpm test` pass; app fails fast on bad env config
-- [ ] `git status` + `git diff --staged` reviewed; no `.db`/`.sqlite` files or secrets staged
-- [ ] This file's **Status** changed to `Done`
-- [ ] Committed locally, no push: `feat: Add SQLite persistence and config validation`
+- [x] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [x] **Verify:** `pnpm db:generate && pnpm db:migrate && pnpm test` pass; app fails fast on bad env config
+- [x] `git status` + `git diff --staged` reviewed; no `.db`/`.sqlite` files or secrets staged
+- [x] This file's **Status** changed to `Done`
+- [x] Committed locally, no push: `feat: Add SQLite persistence and config validation`

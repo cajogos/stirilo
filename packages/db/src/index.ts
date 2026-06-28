@@ -1,2 +1,2 @@
-// Package skeleton for @stirilo/db. Implementation lands in a later phase.
-export {};
+export * from "./schema.js";
+export * from "./client.js";
