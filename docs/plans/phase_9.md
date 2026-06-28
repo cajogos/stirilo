@@ -1,6 +1,6 @@
 # Phase 9: Command Runner (Design Only)
 
-**Status:** Not started
+**Status:** Done
 **Depends on:** Phase 8
 **PRD reference:** Milestone 9, Implementation Order step (command runner design)
 
@@ -24,15 +24,15 @@ Document a safe future command-execution model. **No command runner is implement
 
 ## Deliverables
 
-- [ ] `docs/command-runner.md` covering allowlist, sudo helper, redaction, audit, and risk analysis
-- [ ] Documented safe command categories (`df`, `free`, `uptime`, `lsblk`, `systemctl status`, `journalctl -u`, `docker ps`, `docker compose ps`, `git status`)
-- [ ] Documented forbidden commands (`rm`, `chmod`, `chown`, `dd`, `mkfs`, `userdel`, `usermod`, `passwd`, `iptables`, `ufw`, `systemctl stop/restart`, `docker rm`, `docker volume rm`)
+- [x] `docs/command-runner.md` covering allowlist, sudo helper, redaction, audit, and risk analysis
+- [x] Documented safe command categories (`df`, `free`, `uptime`, `lsblk`, `systemctl status`, `journalctl -u`, `docker ps`, `docker compose ps`, `git status`)
+- [x] Documented forbidden commands (`rm`, `chmod`, `chown`, `dd`, `mkfs`, `userdel`, `usermod`, `passwd`, `iptables`, `ufw`, `systemctl stop/restart`, `docker rm`, `docker volume rm`)
 
 ## Acceptance criteria
 
-- [ ] No arbitrary command runner implemented yet
-- [ ] Future command model is documented
-- [ ] Security boundaries are explicit
+- [x] No arbitrary command runner implemented yet
+- [x] Future command model is documented
+- [x] Security boundaries are explicit
 
 ## Recommendations / Watch-outs
 
@@ -48,18 +48,18 @@ Document a safe future command-execution model. **No command runner is implement
 
 > Design and documentation only - **no executable code** in this phase.
 
-1. [ ] Write `docs/command-runner.md`
-2. [ ] Document the allowlist + argv-validation design
-3. [ ] Document the sudo helper design (narrow sudoers entry; web process never privileged)
-4. [ ] Document redaction + audit rules for command runs
-5. [ ] Write the threat model / risk analysis, with rationale for each forbidden command
+1. [x] Write `docs/command-runner.md`
+2. [x] Document the allowlist + argv-validation design
+3. [x] Document the sudo helper design (narrow sudoers entry; web process never privileged)
+4. [x] Document redaction + audit rules for command runs
+5. [x] Write the threat model / risk analysis, with rationale for each forbidden command
 
 ## Done
 
 Mark this phase complete only when all of the following hold:
 
-- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
-- [ ] **Verify:** `docs/command-runner.md` reviewed; confirm no command-runner code was added (`git diff` is docs-only)
-- [ ] `git status` + `git diff --staged` reviewed; no secrets staged
-- [ ] This file's **Status** changed to `Done`
-- [ ] Committed locally, no push: `docs: Add command runner design and threat model`
+- [x] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [x] **Verify:** `docs/command-runner.md` reviewed; confirm no command-runner code was added (`git diff` is docs-only)
+- [x] `git status` + `git diff --staged` reviewed; no secrets staged
+- [x] This file's **Status** changed to `Done`
+- [x] Committed locally, no push: `docs: Add command runner design and threat model`
