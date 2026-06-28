@@ -14,6 +14,8 @@
     "@stirilo/auth": "workspace:*",
     "@stirilo/core": "workspace:*",
     "@stirilo/db": "workspace:*",
+    "@stirilo/redaction": "workspace:*",
+    "@stirilo/scanner": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "drizzle-orm": "^0.38.3",
     "clsx": "^2.1.1",

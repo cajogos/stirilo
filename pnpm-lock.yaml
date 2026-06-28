@@ -53,6 +53,12 @@ importers:
       '@stirilo/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@stirilo/redaction':
+        specifier: workspace:*
+        version: link:../../packages/redaction
+      '@stirilo/scanner':
+        specifier: workspace:*
+        version: link:../../packages/scanner
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -165,7 +171,11 @@ importers:
 
   packages/redaction: {}
 
-  packages/scanner: {}
+  packages/scanner:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.10.5
+        version: 22.20.0
 
 packages:
 

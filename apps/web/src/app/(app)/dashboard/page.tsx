@@ -5,42 +5,54 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/states";
+import { getLatestScanRun, parseSummary } from "@/server/scans";
+import { formatBytes } from "@/lib/format";
 
-const SUMMARY_CARDS = [
-  "Tracked directories",
-  "Detected Git repositories",
-  "Dirty Git repositories",
-  "Sensitive file markers",
-  "Large files found",
-  "Last scan status",
-];
+function StatCard({ label, value }: { label: string; value: string })
+{
+  return (
+    <Card>
+      <CardHeader>
+        <CardDescription>{label}</CardDescription>
+        <CardTitle className="text-2xl">{value}</CardTitle>
+      </CardHeader>
+    </Card>
+  );
+}
 
 export default function DashboardPage()
 {
+  const latest = getLatestScanRun();
+  const summary = parseSummary(latest);
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
         <p className="text-sm text-muted-foreground">
-          Overview of your local environment. Populated once scanning lands.
+          Overview of your local environment.
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {SUMMARY_CARDS.map((title) => (
-          <Card key={title}>
-            <CardHeader>
-              <CardDescription>{title}</CardDescription>
-              <CardTitle className="text-2xl">&mdash;</CardTitle>
-            </CardHeader>
-          </Card>
-        ))}
-      </div>
-
-      <EmptyState
-        title="No scans yet"
-        description="Add a scan target and run a scan to populate the dashboard."
-      />
+      {summary ? (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard label="Files (last scan)" value={String(summary.fileCount)} />
+          <StatCard
+            label="Directories"
+            value={String(summary.directoryCount)}
+          />
+          <StatCard label="Total size" value={formatBytes(summary.totalSize)} />
+          <StatCard
+            label="Sensitive markers"
+            value={String(summary.sensitiveMarkers.length)}
+          />
+        </div>
+      ) : (
+        <EmptyState
+          title="No scans yet"
+          description="Add a scan target and run a scan to populate the dashboard."
+        />
+      )}
     </div>
   );
 }

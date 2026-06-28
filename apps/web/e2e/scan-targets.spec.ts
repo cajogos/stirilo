@@ -36,3 +36,23 @@ test("rejects a non-existent path", async ({ page }) =>
     timeout: 20_000,
   });
 });
+
+test("runs a scan and shows the metadata summary", async ({ page }) =>
+{
+  await login(page);
+  await page.goto("/scan-targets");
+
+  // A small, stable fixture directory created by the web server command.
+  await page.getByLabel("Name", { exact: true }).fill("Temp");
+  await page.getByLabel("Path", { exact: true }).fill("/tmp/stirilo-scan-fixture");
+  await page.getByRole("checkbox").check();
+  await page.getByRole("button", { name: "Add scan target" }).click();
+  await expect(page).toHaveURL(/\/scan-targets$/, { timeout: 20_000 });
+
+  await page.getByRole("link", { name: "Temp" }).click();
+  await page.getByRole("button", { name: "Run scan" }).click();
+
+  await expect(page.getByText("Latest scan")).toBeVisible({ timeout: 20_000 });
+  // The detected .env in the fixture should surface as a sensitive marker.
+  await expect(page.getByText(/Sensitive markers/)).toBeVisible();
+});

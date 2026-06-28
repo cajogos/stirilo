@@ -56,3 +56,19 @@ export const scanTargets = sqliteTable("scan_targets", {
 
 export type ScanTarget = typeof scanTargets.$inferSelect;
 export type NewScanTarget = typeof scanTargets.$inferInsert;
+
+// A single scan of a target. The metadata summary is stored as JSON.
+export const scanRuns = sqliteTable("scan_runs", {
+  id: text("id").primaryKey(),
+  scanTargetId: text("scan_target_id")
+    .notNull()
+    .references(() => scanTargets.id),
+  status: text("status").notNull(),
+  startedAt: text("started_at").notNull(),
+  finishedAt: text("finished_at"),
+  summaryJson: text("summary_json"),
+  errorMessage: text("error_message"),
+});
+
+export type ScanRun = typeof scanRuns.$inferSelect;
+export type NewScanRun = typeof scanRuns.$inferInsert;

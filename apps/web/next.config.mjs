@@ -74,6 +74,8 @@ const SERVER_EXTERNALS = [
   "@stirilo/db",
   "@stirilo/auth",
   "@stirilo/core",
+  "@stirilo/scanner",
+  "@stirilo/redaction",
   "better-sqlite3",
   "@node-rs/argon2",
 ];

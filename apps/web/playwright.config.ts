@@ -23,8 +23,11 @@ export default defineConfig({
     },
   ],
   webServer: {
-    // Use a production build for deterministic timing (no per-route dev compile).
-    command: `pnpm build && pnpm exec next start -p ${PORT} -H 127.0.0.1`,
+    // Create a small, stable fixture directory for the scan test, then run a
+    // production build (deterministic timing, no per-route dev compile).
+    command:
+      "mkdir -p /tmp/stirilo-scan-fixture && printf x > /tmp/stirilo-scan-fixture/readme.txt && printf 'SECRET=x\\n' > /tmp/stirilo-scan-fixture/.env && " +
+      `pnpm build && pnpm exec next start -p ${PORT} -H 127.0.0.1`,
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
