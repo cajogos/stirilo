@@ -3,7 +3,6 @@
 import { randomBytes } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import readline from "node:readline";
 import { fileURLToPath } from "node:url";
 import { Algorithm, hash } from "@node-rs/argon2";
 
@@ -13,30 +12,12 @@ const examplePath = join(repoRoot, ".env.example");
 
 const isTty = Boolean(process.stdin.isTTY);
 
-// Interactive prompts use a readline interface; piped input is read once upfront
-// (sequential readline questions do not resolve on a non-TTY stream).
-let rl = null;
+// Piped (non-TTY) input is read once upfront and consumed line by line.
 let pipedLines = null;
-let muted = false;
 
 async function init()
 {
-  if (isTty)
-  {
-    rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-      terminal: true,
-    });
-    rl._writeToOutput = (str) =>
-    {
-      if (!muted)
-      {
-        rl.output.write(str);
-      }
-    };
-  }
-  else
+  if (!isTty)
   {
     const chunks = [];
     for await (const chunk of process.stdin)
@@ -47,6 +28,59 @@ async function init()
   }
 }
 
+// Read one line from a TTY, echoing input (or masking it when hidden). Avoids
+// readline, whose masked-prompt pattern hangs on a second question.
+function readLineTty(query, mask)
+{
+  return new Promise((resolve) =>
+  {
+    const stdin = process.stdin;
+    process.stdout.write(query);
+    stdin.setRawMode(true);
+    stdin.resume();
+    stdin.setEncoding("utf8");
+    let input = "";
+
+    const onData = (chunk) =>
+    {
+      for (const ch of chunk)
+      {
+        if (ch === "\r" || ch === "\n")
+        {
+          stdin.setRawMode(false);
+          stdin.pause();
+          stdin.removeListener("data", onData);
+          process.stdout.write("\n");
+          resolve(input.trim());
+          return;
+        }
+        if (ch === "\u0003")
+        {
+          // Ctrl-C
+          process.stdout.write("\n");
+          process.exit(130);
+        }
+        if (ch === "\u007f" || ch === "\b")
+        {
+          if (input.length > 0)
+          {
+            input = input.slice(0, -1);
+            if (!mask)
+            {
+              process.stdout.write("\b \b");
+            }
+          }
+          continue;
+        }
+        input += ch;
+        process.stdout.write(mask ? "*" : ch);
+      }
+    };
+
+    stdin.on("data", onData);
+  });
+}
+
 function ask(query)
 {
   if (!isTty)
@@ -54,9 +88,7 @@ function ask(query)
     process.stdout.write(query);
     return Promise.resolve((pipedLines.shift() ?? "").trim());
   }
-  return new Promise((resolve) =>
-    rl.question(query, (answer) => resolve(answer.trim())),
-  );
+  return readLineTty(query, false);
 }
 
 function askHidden(query)
@@ -65,17 +97,7 @@ function askHidden(query)
   {
     return ask(query);
   }
-  return new Promise((resolve) =>
-  {
-    process.stdout.write(query);
-    muted = true;
-    rl.question("", (answer) =>
-    {
-      muted = false;
-      rl.output.write("\n");
-      resolve(answer.trim());
-    });
-  });
+  return readLineTty(query, true);
 }
 
 // Replace KEY=... in place, or append it if absent. Preserves other lines.
@@ -127,13 +149,13 @@ async function main()
   const password = await askHidden("Password: ");
   if (!password)
   {
-    console.error("\nError: password must not be empty.");
+    console.error("Error: password must not be empty.");
     process.exit(1);
   }
   const confirm = await askHidden("Confirm password: ");
   if (password !== confirm)
   {
-    console.error("\nError: passwords do not match.");
+    console.error("Error: passwords do not match.");
     process.exit(1);
   }
 
@@ -148,12 +170,11 @@ async function main()
   if (!existingSecret)
   {
     upsert(lines, "STIRILO_SESSION_SECRET", randomBytes(32).toString("hex"));
-    console.log("\nGenerated a new STIRILO_SESSION_SECRET.");
+    console.log("Generated a new STIRILO_SESSION_SECRET.");
   }
 
   const output = lines.join("\n").replace(/\n*$/, "\n");
   writeFileSync(envPath, output, { mode: 0o600 });
-  rl?.close();
 
   console.log(`\nWrote ${envPath}`);
   console.log(`  user: ${username}`);
