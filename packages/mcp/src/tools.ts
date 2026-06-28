@@ -1,4 +1,5 @@
-import { z, type ZodRawShape } from "zod";
+import { type ZodRawShape } from "zod";
+import { idParamSchema } from "@stirilo/core";
 import type { ApiClient } from "./api.js";
 
 export interface ToolResult
@@ -74,7 +75,7 @@ export function createTools(client: ApiClient): ToolDef[]
     {
       name: "stirilo_get_scan_target",
       description: "Get a single scan target by id.",
-      schema: { id: z.string() },
+      schema: idParamSchema.shape,
       handler: async (args) =>
         text(await client.get(`/api/scan-targets/${String(args.id)}`)),
     },
@@ -93,7 +94,7 @@ export function createTools(client: ApiClient): ToolDef[]
     {
       name: "stirilo_get_git_status",
       description: "Get the latest status snapshot for a Git repository by id.",
-      schema: { id: z.string() },
+      schema: idParamSchema.shape,
       handler: async (args) =>
         text(await client.get(`/api/git/repos/${String(args.id)}/status`)),
     },

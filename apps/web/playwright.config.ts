@@ -37,6 +37,8 @@ export default defineConfig({
     // Test-only single-user credentials. The hash is argon2id("password") and is
     // a throwaway fixture, not a real secret. The DB lives in a temp directory.
     env: {
+      // Build/start into a dedicated dir so e2e never corrupts a running dev server.
+      STIRILO_DIST_DIR: ".next-verify",
       STIRILO_USERNAME: "admin",
       STIRILO_PASSWORD_HASH:
         "$argon2id$v=19$m=19456,t=2,p=1$qKWdXixdua4QKEitnLkzEw$YnREw1dDBlBTwIhdoLm0AKnXcXAFrKwUFHkXAInSWXs",

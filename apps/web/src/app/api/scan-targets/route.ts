@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
+import { createScanTargetBodySchema } from "@stirilo/core";
 import { requireAgent, jsonError } from "@/server/api";
 import { listScanTargets } from "@/server/scan-targets";
 import { createScanTargetRecord } from "@/server/services/scan-targets-service";
@@ -13,12 +13,6 @@ export async function GET(request: Request): Promise<NextResponse>
   }
   return NextResponse.json({ scanTargets: listScanTargets() });
 }
-
-const createSchema = z.object({
-  name: z.string().min(1),
-  path: z.string().min(1),
-  confirm: z.boolean().optional(),
-});
 
 export async function POST(request: Request): Promise<NextResponse>
 {
@@ -38,7 +32,7 @@ export async function POST(request: Request): Promise<NextResponse>
     return jsonError("VALIDATION_ERROR", "Request body must be JSON.", 400);
   }
 
-  const parsed = createSchema.safeParse(body);
+  const parsed = createScanTargetBodySchema.safeParse(body);
   if (!parsed.success)
   {
     return jsonError("VALIDATION_ERROR", "Invalid request body.", 400, {

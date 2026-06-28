@@ -84,6 +84,9 @@ const SERVER_EXTERNALS = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Verification runs (build / e2e) set STIRILO_DIST_DIR to a dedicated folder so
+  // they never share `.next` with a running `pnpm dev` and corrupt it.
+  distDir: process.env.STIRILO_DIST_DIR || ".next",
   outputFileTracingRoot: repoRoot,
   serverExternalPackages: ["better-sqlite3", "@node-rs/argon2"],
   // Linting is run separately via the repo-wide ESLint flat config (pnpm lint).

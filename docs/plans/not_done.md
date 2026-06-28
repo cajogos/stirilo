@@ -6,18 +6,16 @@ The outstanding pieces carried over from those phases have been promoted into
 the post-v0.1 roadmap (see [README.md](README.md)); they are tracked below by
 their owning phase.
 
-## Promoted to Phase 11 (Close v0.1 Open Loops)
+## Phase 11 (Close v0.1 Open Loops) - done except CI
 
-- **CI verification (from Phase 0 / Phase 10):** the GitHub Actions workflow
-  exists and the chain (`pnpm lint && pnpm typecheck && pnpm test && pnpm build`
-  + gitleaks) passes locally, but **CI has never actually run** because nothing
-  has been pushed yet (push is deliberately deferred).
-- **zod-to-openapi auto-generation (from Phase 7):** `docs/api.md` is hand-written;
-  generate it and the Phase 8 MCP tool schemas from a single Zod/OpenAPI source so
-  they can't drift.
-- **Dedicated build dir for CI/e2e:** `pnpm build`/`pnpm test:e2e` share
-  `apps/web/.next` with `pnpm dev` and can corrupt a running dev server; a
-  separate `distDir` for verification runs would prevent that.
+- **zod-to-openapi auto-generation:** DONE. `docs/api.md` + `docs/openapi.json`
+  are generated from `@stirilo/core`'s contract via `pnpm docs:api`; the web
+  route validation and MCP `id` param derive from the same source.
+- **Dedicated build dir for CI/e2e:** DONE. `STIRILO_DIST_DIR` drives the Next
+  `distDir`; e2e builds/starts into `.next-verify`.
+- **CI verification (from Phase 0 / Phase 10):** STILL OPEN. The chain passes
+  locally but **CI has never actually run** because nothing has been pushed yet
+  (push is deliberately deferred). To close: push and confirm CI goes green.
 
 ## Promoted to Phase 13 (Git Intelligence)
 

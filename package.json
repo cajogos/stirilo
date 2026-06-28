@@ -15,6 +15,7 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:e2e": "tsc -b && pnpm --filter @stirilo/web test:e2e",
+    "docs:api": "tsc -b packages/core && node scripts/generate-api-docs.mjs",
     "setup": "node scripts/setup.mjs",
     "hash:password": "pnpm --filter @stirilo/auth hash:password",
     "db:generate": "pnpm --filter @stirilo/db db:generate",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
+    "@stirilo/core": "workspace:*",
     "@commitlint/config-conventional": "^19.6.0",
     "@eslint/js": "^9.17.0",
     "@node-rs/argon2": "^2.0.2",

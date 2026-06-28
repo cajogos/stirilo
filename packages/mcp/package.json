@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",
+    "@stirilo/core": "workspace:*",
     "zod": "^3.24.1"
   },
   "devDependencies": {

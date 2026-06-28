@@ -12,4 +12,9 @@ paths = [
   '''\.env\.example$''',
   # The redaction test file holds deliberately secret-shaped fixtures.
   '''packages/redaction/src/redact\.test\.ts$''',
+  # Generated/compiled build output (gitignored, never committed): Next.js build
+  # manifests carry random build-generated tokens and dist/ mirrors source
+  # fixtures. A full `gitleaks dir .` after a build would otherwise flag these.
+  '''(^|/)\.next(-verify)?/''',
+  '''(^|/)dist/''',
 ]
