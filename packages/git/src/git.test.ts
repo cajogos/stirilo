@@ -71,6 +71,33 @@ describe("getGitStatus", () =>
   });
 });
 
+describe("getGitStatus fetch option", () =>
+{
+  it("populates remoteLastCommitDate only when fetching", async () =>
+  {
+    const remote = tempDir();
+    execFileSync("git", ["init", "--bare", "-q", remote], { stdio: "ignore" });
+
+    const work = tempDir();
+    execFileSync("git", ["clone", "-q", remote, work], { stdio: "ignore" });
+    const opts = { cwd: work, stdio: "ignore" as const };
+    execFileSync("git", ["config", "user.email", "t@example.com"], opts);
+    execFileSync("git", ["config", "user.name", "Tester"], opts);
+    execFileSync("git", ["config", "commit.gpgsign", "false"], opts);
+    writeFileSync(join(work, "a.txt"), "hello");
+    execFileSync("git", ["add", "."], opts);
+    execFileSync("git", ["commit", "-m", "init", "-q"], opts);
+    execFileSync("git", ["push", "-q", "-u", "origin", "HEAD"], opts);
+
+    const local = await getGitStatus(work);
+    expect(local.remoteLastCommitDate).toBeNull();
+
+    const fetched = await getGitStatus(work, { fetch: true });
+    expect(fetched.remoteLastCommitDate).toBeTruthy();
+    expect(fetched.aheadCount).toBe(0);
+  });
+});
+
 describe("findRepositories", () =>
 {
   it("finds a repository under a root directory", async () =>

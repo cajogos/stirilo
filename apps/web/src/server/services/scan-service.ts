@@ -12,6 +12,7 @@ import {
 import { scanDirectory } from "@stirilo/scanner";
 import { findRepositories } from "@stirilo/git";
 import { getDb } from "@/server/db";
+import { getBooleanSetting, SETTING_KEYS } from "@/server/settings";
 
 export type ExecuteScanResult =
   | { ok: true; runId: string; status: "completed" | "failed" }
@@ -33,11 +34,18 @@ async function detectGitRepositories(
 ): Promise<number>
 {
   let count = 0;
-  const repos = await findRepositories(rootPath, (repo) =>
-  {
-    count += 1;
-    onEvent?.({ type: "repo", path: repo.path });
-  });
+  // Off by default. When enabled in settings, scans fetch from remotes so
+  // ahead/behind and the upstream commit date are accurate (a behavior change).
+  const fetch = getBooleanSetting(SETTING_KEYS.gitFetchOnScan, false);
+  const repos = await findRepositories(
+    rootPath,
+    (repo) =>
+    {
+      count += 1;
+      onEvent?.({ type: "repo", path: repo.path });
+    },
+    { fetch },
+  );
   for (const repo of repos)
   {
     const now = new Date().toISOString();
@@ -91,6 +99,7 @@ async function detectGitRepositories(
         lastCommitHash: repo.status.lastCommitHash,
         lastCommitSubject: repo.status.lastCommitSubject,
         lastCommitDate: repo.status.lastCommitDate,
+        remoteLastCommitDate: repo.status.remoteLastCommitDate,
         sizeBytes: repo.sizeBytes,
         createdAt: now,
       })

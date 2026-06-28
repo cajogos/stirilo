@@ -1,4 +1,5 @@
 import { basename } from "node:path";
+import Link from "next/link";
 import { listGitRepositories } from "@/server/git-repos";
 import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/states";
@@ -36,6 +37,12 @@ export default function GitPage()
           Detected during scans. Remote URLs are stored without credentials.
           Click a column header to sort.
         </p>
+        <Link
+          href="/git/at-risk"
+          className="mt-2 inline-block text-sm font-medium underline-offset-4 hover:underline"
+        >
+          View at-risk repositories &rarr;
+        </Link>
       </div>
 
       {rows.length === 0 ? (

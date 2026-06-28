@@ -43,6 +43,13 @@
       "when": 1782677632667,
       "tag": "0005_dark_night_nurse",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1782682047402,
+      "tag": "0006_even_doctor_spectrum",
+      "breakpoints": true
     }
   ]
 }

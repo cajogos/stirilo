@@ -617,6 +617,49 @@
         }
       }
     },
+    "/api/git/at-risk": {
+      "get": {
+        "summary": "Cross-repo at-risk report: dirty, unpushed, no-remote, stale.",
+        "security": [
+          {
+            "agentToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid agent token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/insights/sensitive": {
       "get": {
         "summary": "Sensitive-file inventory (metadata only) across latest scans.",

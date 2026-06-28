@@ -1,0 +1,1 @@
+ALTER TABLE `git_status_snapshots` ADD `remote_last_commit_date` text;

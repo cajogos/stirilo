@@ -149,6 +149,13 @@ export const API_ROUTES: ApiRouteDef[] = [
   },
   {
     method: "get",
+    path: "/api/git/at-risk",
+    summary: "Cross-repo at-risk report: dirty, unpushed, no-remote, stale.",
+    auth: true,
+    successStatus: 200,
+  },
+  {
+    method: "get",
     path: "/api/insights/sensitive",
     summary: "Sensitive-file inventory (metadata only) across latest scans.",
     auth: true,

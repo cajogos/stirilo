@@ -31,9 +31,24 @@ export interface GitStatus
   lastCommitHash: string | null;
   lastCommitSubject: string | null;
   lastCommitDate: string | null;
+  // Last commit date on the tracked upstream branch. Only populated when a
+  // fetch was performed (otherwise it reflects local refs, so it is left null).
+  remoteLastCommitDate: string | null;
   sanitizedRemoteUrl: string | null;
   remoteHost: string | null;
 }
+
+export interface GitStatusOptions
+{
+  // When true, run `git fetch` before computing status so ahead/behind and the
+  // remote last-commit date reflect the true remote. Off by default: fetching
+  // is a network operation and a behavior change from pure local inspection.
+  fetch?: boolean;
+}
+
+// Network operations (fetch) get a bounded timeout so a slow or hanging remote
+// never stalls a scan.
+const FETCH_TIMEOUT_MS = 15_000;
 
 export interface GitRepository
 {
@@ -44,14 +59,18 @@ export interface GitRepository
 
 // Run a git subcommand with safe argument arrays. Never uses a shell, never runs
 // hooks. Returns trimmed stdout, or null on failure.
-async function git(cwd: string, args: string[]): Promise<string | null>
+async function git(
+  cwd: string,
+  args: string[],
+  timeout = 0,
+): Promise<string | null>
 {
   try
   {
     const { stdout } = await run(
       "git",
       ["-c", "core.hooksPath=/dev/null", ...args],
-      { cwd, windowsHide: true, maxBuffer: 4 * 1024 * 1024 },
+      { cwd, windowsHide: true, maxBuffer: 4 * 1024 * 1024, timeout },
     );
     return stdout.trim();
   }
@@ -191,8 +210,18 @@ function parseStatus(porcelain: string): Pick<
   };
 }
 
-export async function getGitStatus(repoPath: string): Promise<GitStatus>
+export async function getGitStatus(
+  repoPath: string,
+  options: GitStatusOptions = {},
+): Promise<GitStatus>
 {
+  // Optional, off-by-default network fetch so ahead/behind and the upstream
+  // commit date reflect the true remote. Best-effort and time-boxed.
+  if (options.fetch)
+  {
+    await git(repoPath, ["fetch", "--quiet", "--no-tags"], FETCH_TIMEOUT_MS);
+  }
+
   const porcelain = (await git(repoPath, ["status", "--porcelain=v1", "--branch"])) ?? "";
   const parsed = parseStatus(porcelain);
 
@@ -212,6 +241,15 @@ export async function getGitStatus(repoPath: string): Promise<GitStatus>
     lastCommitSubject = subject ?? null;
   }
 
+  // Upstream last-commit date is only meaningful after a fetch; left null
+  // otherwise so the UI never implies stale local refs are remote truth.
+  let remoteLastCommitDate: string | null = null;
+  if (options.fetch)
+  {
+    remoteLastCommitDate =
+      (await git(repoPath, ["log", "-1", "--pretty=format:%ci", "@{u}"])) || null;
+  }
+
   const remote = await git(repoPath, ["remote", "get-url", "origin"]);
   const sanitized = sanitizeRemoteUrl(remote);
 
@@ -220,6 +258,7 @@ export async function getGitStatus(repoPath: string): Promise<GitStatus>
     lastCommitHash,
     lastCommitSubject,
     lastCommitDate,
+    remoteLastCommitDate,
     sanitizedRemoteUrl: sanitized.url,
     remoteHost: sanitized.host,
   };
@@ -231,6 +270,7 @@ export async function getGitStatus(repoPath: string): Promise<GitStatus>
 export async function findRepositories(
   root: string,
   onRepo?: (repo: GitRepository) => void,
+  options: GitStatusOptions = {},
 ): Promise<GitRepository[]>
 {
   const repos: GitRepository[] = [];
@@ -242,7 +282,7 @@ export async function findRepositories(
       const repo: GitRepository = {
         path: dir,
         sizeBytes: await directorySize(dir),
-        status: await getGitStatus(dir),
+        status: await getGitStatus(dir, options),
       };
       repos.push(repo);
       onRepo?.(repo);

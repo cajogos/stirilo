@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -102,4 +103,33 @@ test("sensitive inventory lists a fixture .env by metadata only", async ({
   expect(body.sensitive.byRule.some((r) => r.rule === "env-file")).toBeTruthy();
   expect(text).not.toContain(sentinel);
   expect(text).not.toContain("e2e-agent-token-value");
+});
+
+test("at-risk report flags a repo with no remote", async ({ request }) =>
+{
+  const dir = mkdtempSync(join(tmpdir(), "stirilo-atrisk-"));
+  const opts = { cwd: dir, stdio: "ignore" as const };
+  execFileSync("git", ["init", "-q"], opts);
+  execFileSync("git", ["config", "user.email", "t@example.com"], opts);
+  execFileSync("git", ["config", "user.name", "Tester"], opts);
+  execFileSync("git", ["config", "commit.gpgsign", "false"], opts);
+  writeFileSync(join(dir, "a.txt"), "x");
+  execFileSync("git", ["add", "."], opts);
+  execFileSync("git", ["commit", "-q", "-m", "init"], opts);
+
+  const created = await request.post("/api/scan-targets", {
+    headers: auth,
+    data: { name: `AtRisk ${Date.now()}`, path: dir, confirm: true },
+  });
+  expect(created.status()).toBe(201);
+  const { id } = await created.json();
+  await request.post(`/api/scan-targets/${id}/scan`, { headers: auth });
+
+  const res = await request.get("/api/git/at-risk", { headers: auth });
+  expect(res.ok()).toBeTruthy();
+  const { atRisk } = await res.json();
+  expect(atRisk.counts.noRemote).toBeGreaterThanOrEqual(1);
+  expect(
+    atRisk.noRemote.some((r: { path: string }) => r.path === dir),
+  ).toBeTruthy();
 });

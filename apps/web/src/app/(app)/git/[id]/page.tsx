@@ -89,6 +89,10 @@ export default async function GitRepoDetailPage({ params }: GitRepoDetailProps)
               value={status.lastCommitHash?.slice(0, 12) ?? "-"}
             />
             <Field label="Commit date" value={status.lastCommitDate ?? "-"} />
+            <Field
+              label="Remote commit date"
+              value={status.remoteLastCommitDate ?? "Not fetched"}
+            />
           </CardContent>
         </Card>
       ) : null}

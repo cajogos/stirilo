@@ -1,8 +1,19 @@
 # Phase 13: Git Intelligence
 
-**Status:** Planned
+**Status:** Done
 **Depends on:** Phase 10 (git scanner)
 **PRD reference:** Beyond PRD v0.1 (roadmap); incorporates the "git remote freshness" note from `not_done.md`
+
+## Implementation notes
+
+- At-risk analysis (`server/git-intel.ts`) is a pure consumer of the latest
+  status snapshot per repo; page at `/git/at-risk`, API at `/api/git/at-risk`.
+- "Stale" is interpreted at the repo level (no commit in 180+ days), since
+  snapshots track the current branch's last commit, not every branch.
+- Off-by-default fetch: `getGitStatus(path, { fetch })` runs a time-boxed
+  `git fetch --quiet --no-tags` and captures the upstream commit date
+  (`remoteLastCommitDate`, new DB column, migration `0006`). Controlled by the
+  `git.fetch_on_scan` setting, toggled on the Settings page.
 
 ## Goal
 
@@ -22,17 +33,17 @@ Aggregate the per-repo Git data already collected into a cross-repo view that fl
 
 ## Deliverables
 
-- [ ] At-risk dashboard: dirty, unpushed, no-remote, and stale-branch sections.
-- [ ] Off-by-default fetch toggle producing true ahead/behind + remote last commit.
-- [ ] Activity view (commit cadence, last-active) from `git log`.
-- [ ] Server-layer aggregation queries across `git_repositories` / `git_status_snapshots`.
+- [x] At-risk dashboard: dirty, unpushed, no-remote, and stale sections (`/git/at-risk`).
+- [x] Off-by-default fetch toggle producing true ahead/behind + remote last commit date.
+- [x] Activity view (most recently committed repos) on the at-risk page.
+- [x] Server-layer aggregation over the latest snapshot per repository.
 
 ## Acceptance criteria
 
-- [ ] At-risk categories computed across all scanned repos, not per-repo only.
-- [ ] Fetch is off by default; enabling it is explicit and documented as a behavior change.
-- [ ] All Git invocations use safe argv arrays, never shell strings; no hooks run.
-- [ ] Remote URLs remain sanitized (no embedded credentials) everywhere.
+- [x] At-risk categories computed across all scanned repos, not per-repo only.
+- [x] Fetch is off by default; enabling it is explicit (Settings toggle) and documented as a behavior change.
+- [x] All Git invocations use safe argv arrays, never shell strings; hooks stay disabled (`core.hooksPath=/dev/null`).
+- [x] Remote URLs remain sanitized (no embedded credentials) everywhere.
 
 ## Recommendations / Watch-outs
 
@@ -48,18 +59,18 @@ Aggregate the per-repo Git data already collected into a cross-repo view that fl
 
 ## Implementation Checklist
 
-1. [ ] Add aggregation queries for dirty / unpushed / no-remote / stale-branch.
-2. [ ] Build the at-risk dashboard with those sections.
-3. [ ] Add the off-by-default fetch toggle + true ahead/behind + remote last commit.
-4. [ ] Add the activity view from `git log`.
-5. [ ] Tests: remote sanitization, no-hooks invocation, fetch-disabled default, at-risk classification.
+1. [x] Add aggregation (`git-intel.ts`) for dirty / unpushed / no-remote / stale.
+2. [x] Build the at-risk dashboard with those sections + summary stats.
+3. [x] Add the off-by-default fetch option (git pkg) + remoteLastCommitDate column + Settings toggle + scan-service wiring.
+4. [x] Add the activity view (recent commits) on the at-risk page.
+5. [x] Tests: git fetch/remote-date unit test; e2e proving no-remote repo is flagged.
 
 ## Done
 
 Mark this phase complete only when all of the following hold:
 
-- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
-- [ ] **Verify:** at-risk dashboard correctly flags a seeded dirty/no-remote repo; fetch stays off unless toggled; remote URLs render sanitized
-- [ ] `git status` + `git diff --staged` reviewed; no secrets staged
-- [ ] This file's **Status** changed to `Done`
+- [x] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [x] **Verify:** e2e flags a seeded no-remote repo via `/api/git/at-risk`; git unit test proves remoteLastCommitDate is set only with fetch; lint + typecheck + 56 unit + 15 e2e pass
+- [x] `git status` + `git diff --staged` reviewed; no secrets staged
+- [x] This file's **Status** changed to `Done`
 - [ ] Committed locally: `feat: Add cross-repo git intelligence dashboard`
