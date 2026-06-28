@@ -1,6 +1,6 @@
 # Phase 3: Scan Targets
 
-**Status:** Not started
+**Status:** Done
 **Depends on:** Phase 2b
 **PRD reference:** Milestone 3, Implementation Order step 8
 
@@ -24,21 +24,21 @@ Let the user register local directories as scan targets, with strict path valida
 
 ## Deliverables
 
-- [ ] `scan_targets` table (name, path unique, enabled, timestamps, last scan status/time)
-- [ ] List page + add form
-- [ ] Detail page
-- [ ] Path validation logic (unit tested)
-- [ ] Blocked-path rules (unit tested)
-- [ ] Audit logging for scan target mutations
+- [x] `scan_targets` table (name, path unique, enabled, timestamps, last scan status/time)
+- [x] List page + add form
+- [x] Detail page
+- [x] Path validation logic (unit tested)
+- [x] Blocked-path rules (unit tested)
+- [x] Audit logging for scan target mutations
 
 ## Acceptance criteria
 
-- [ ] User can add a valid directory
-- [ ] Invalid path is rejected
-- [ ] Blocked path requires explicit handling/confirmation
-- [ ] Scan target is stored in SQLite
-- [ ] Scan target appears in the UI
-- [ ] Scan targets can be listed programmatically (formal API in Phase 7)
+- [x] User can add a valid directory
+- [x] Invalid path is rejected
+- [x] Blocked path requires explicit handling/confirmation
+- [x] Scan target is stored in SQLite
+- [x] Scan target appears in the UI
+- [x] Scan targets can be listed programmatically (formal API in Phase 7)
 
 ## Recommendations / Watch-outs
 
@@ -56,20 +56,20 @@ This is the highest-risk validation in the project. Get all three right:
 
 ## Implementation Checklist
 
-1. [ ] Add the `scan_targets` table + migration
-2. [ ] Implement path validation: expand `~`, `fs.realpath` canonicalize, check exists/directory/readable
-3. [ ] Implement segment-aware blocklist matching + explicit-confirmation handling
-4. [ ] Add the list page `/scan-targets` and the add form
-5. [ ] Add the detail page `/scan-targets/:id`
-6. [ ] Add audit logging for scan-target create/update
-7. [ ] Unit tests for path validation + blocklist, including symlink and `..` traversal cases
+1. [x] Add the `scan_targets` table + migration
+2. [x] Implement path validation: expand `~`, `fs.realpath` canonicalize, check exists/directory/readable
+3. [x] Implement segment-aware blocklist matching + explicit-confirmation handling
+4. [x] Add the list page `/scan-targets` and the add form
+5. [x] Add the detail page `/scan-targets/:id`
+6. [x] Add audit logging for scan-target create/update
+7. [x] Unit tests for path validation + blocklist, including symlink and `..` traversal cases
 
 ## Done
 
 Mark this phase complete only when all of the following hold:
 
-- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
-- [ ] **Verify:** `pnpm test` passes; manual add of a valid dir works, invalid is rejected, blocked path requires confirmation
-- [ ] `git status` + `git diff --staged` reviewed; no secrets staged
-- [ ] This file's **Status** changed to `Done`
-- [ ] Committed locally, no push: `feat: Add scan target management`
+- [x] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [x] **Verify:** `pnpm test` passes; manual add of a valid dir works, invalid is rejected, blocked path requires confirmation
+- [x] `git status` + `git diff --staged` reviewed; no secrets staged
+- [x] This file's **Status** changed to `Done`
+- [x] Committed locally, no push: `feat: Add scan target management`

@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 // Key/value application settings. The database is dedicated to Stirilo, so no
 // table prefix is used.
@@ -41,3 +41,18 @@ export const auditLog = sqliteTable("audit_log", {
 
 export type AuditEntry = typeof auditLog.$inferSelect;
 export type NewAuditEntry = typeof auditLog.$inferInsert;
+
+// Local directories registered as scan targets.
+export const scanTargets = sqliteTable("scan_targets", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  path: text("path").notNull().unique(),
+  enabled: integer("enabled", { mode: "boolean" }).notNull().default(true),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+  lastScanAt: text("last_scan_at"),
+  lastScanStatus: text("last_scan_status"),
+});
+
+export type ScanTarget = typeof scanTargets.$inferSelect;
+export type NewScanTarget = typeof scanTargets.$inferInsert;

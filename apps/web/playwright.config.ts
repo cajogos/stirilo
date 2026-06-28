@@ -20,10 +20,11 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "pnpm dev",
+    // Use a production build for deterministic timing (no per-route dev compile).
+    command: "pnpm build && pnpm start",
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    timeout: 180_000,
     // Test-only single-user credentials. The hash is argon2id("password") and is
     // a throwaway fixture, not a real secret. The DB lives in a temp directory.
     env: {

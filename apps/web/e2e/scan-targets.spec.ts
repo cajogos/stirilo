@@ -1,0 +1,38 @@
+import { test, expect, type Page } from "@playwright/test";
+
+async function login(page: Page): Promise<void>
+{
+  await page.goto("/login");
+  await page.getByLabel("Username").fill("admin");
+  await page.getByLabel("Password").fill("password");
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await expect(page).toHaveURL(/\/dashboard$/, { timeout: 20_000 });
+}
+
+test("adds a scan target with confirmation and lists it", async ({ page }) =>
+{
+  await login(page);
+  await page.goto("/scan-targets");
+
+  await page.getByLabel("Name", { exact: true }).fill("Etc");
+  await page.getByLabel("Path", { exact: true }).fill("/etc");
+  await page.getByRole("checkbox").check();
+  await page.getByRole("button", { name: "Add scan target" }).click();
+
+  await expect(page).toHaveURL(/\/scan-targets$/, { timeout: 20_000 });
+  await expect(page.getByText("/etc", { exact: true })).toBeVisible();
+});
+
+test("rejects a non-existent path", async ({ page }) =>
+{
+  await login(page);
+  await page.goto("/scan-targets");
+
+  await page.getByLabel("Name", { exact: true }).fill("Nope");
+  await page.getByLabel("Path", { exact: true }).fill("/no/such/directory/xyz");
+  await page.getByRole("button", { name: "Add scan target" }).click();
+
+  await expect(page.getByText(/Path does not exist/i)).toBeVisible({
+    timeout: 20_000,
+  });
+});
