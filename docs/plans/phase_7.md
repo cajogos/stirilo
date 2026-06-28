@@ -60,3 +60,23 @@ An authenticated, read-first local HTTP API that exposes Stirilo's data with a s
 - Do not expose secrets, `.env` contents, raw session data, or raw agent tokens.
 - Use structured responses suitable for AI agents.
 - Apply redaction to any field that could carry secret-like data.
+
+## Implementation Checklist
+
+1. [ ] Extract a shared service layer used by both UI server actions and the API
+2. [ ] Add agent-token auth middleware (Bearer header, constant-time compare)
+3. [ ] Implement the routes: health, system/summary, scan-targets (list/create/get/scan), scans, git repos/status, audit-log
+4. [ ] Add Zod validation + a centralized error-shape handler
+5. [ ] Add `zod-to-openapi`; generate `docs/api.md`
+6. [ ] Audit mutating actions only
+7. [ ] Tests: unauth rejected, valid token accepted, no secrets returned, structured JSON
+
+## Done
+
+Mark this phase complete only when all of the following hold:
+
+- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [ ] **Verify:** `pnpm test` passes; API rejects unauth requests, accepts a valid token, never returns secrets
+- [ ] `git status` + `git diff --staged` reviewed; no agent token or secrets staged
+- [ ] This file's **Status** changed to `Done`
+- [ ] Committed locally, no push: `feat: Add authenticated HTTP API`

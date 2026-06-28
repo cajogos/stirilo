@@ -45,3 +45,20 @@ A useful at-a-glance dashboard that summarizes scan and Git data, with proper em
 ## Safety notes
 
 - Surface counts and summaries only; never render sensitive file contents or environment values.
+
+## Implementation Checklist
+
+1. [ ] Add server-layer aggregation queries (SQL counts/summaries)
+2. [ ] Build the dashboard cards: tracked dirs, repos, dirty repos, last scan, sensitive markers, large files, recent changes, system health
+3. [ ] Implement empty, loading, and error states
+4. [ ] Add tests/E2E covering dashboard render and the empty state
+
+## Done
+
+Mark this phase complete only when all of the following hold:
+
+- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [ ] **Verify:** `pnpm test:e2e` passes; dashboard shows a useful overview after scans and a clean empty state before
+- [ ] `git status` + `git diff --staged` reviewed; no secrets staged
+- [ ] This file's **Status** changed to `Done`
+- [ ] Committed locally, no push: `feat: Add dashboard summary`

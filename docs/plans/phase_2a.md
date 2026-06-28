@@ -43,3 +43,23 @@ Real persistence and validated configuration: a Drizzle-managed SQLite database 
 
 - Never commit the database file; `data/` holds only `.gitkeep`.
 - Never expose `process.env` through any route.
+
+## Implementation Checklist
+
+1. [ ] Create `packages/db` with a `better-sqlite3` + Drizzle connection
+2. [ ] Mark `better-sqlite3` external in the Next.js config
+3. [ ] Define the `settings` table schema
+4. [ ] Set up drizzle-kit migrations; wire `db:generate` / `db:migrate` / `db:studio`
+5. [ ] Add `:memory:` database support for tests
+6. [ ] Add the Zod env config loader (fail-fast at startup)
+7. [ ] Write unit tests for config validation
+
+## Done
+
+Mark this phase complete only when all of the following hold:
+
+- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [ ] **Verify:** `pnpm db:generate && pnpm db:migrate && pnpm test` pass; app fails fast on bad env config
+- [ ] `git status` + `git diff --staged` reviewed; no `.db`/`.sqlite` files or secrets staged
+- [ ] This file's **Status** changed to `Done`
+- [ ] Committed locally, no push: `feat: Add SQLite persistence and config validation`

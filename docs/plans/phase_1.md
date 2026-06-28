@@ -51,3 +51,25 @@ A running Next.js application with the visual shell in place: layout, navigation
 
 - Default bind address `127.0.0.1`; do not bind to LAN.
 - No environment variables are rendered into client components.
+
+## Implementation Checklist
+
+1. [ ] Create the Next.js app (App Router) in `apps/web/`
+2. [ ] Configure the dev server to run on port 3157
+3. [ ] Add Tailwind CSS
+4. [ ] Add shadcn/ui + lucide-react; wire `next-themes` for dark mode
+5. [ ] Build the dashboard layout: sidebar, top bar, content area, status indicators
+6. [ ] Add reusable UI primitives: card, table, empty/error/loading states
+7. [ ] Add placeholder pages: `/login`, `/dashboard`, `/settings`, `/health`
+8. [ ] Add Next.js middleware redirecting unauthenticated users to `/login` (swappable stub seam)
+9. [ ] Add a basic Playwright smoke test
+
+## Done
+
+Mark this phase complete only when all of the following hold:
+
+- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [ ] **Verify:** `pnpm dev` serves on `127.0.0.1:3157` and redirects to `/login`; `pnpm test:e2e` smoke test passes
+- [ ] `git status` + `git diff --staged` reviewed; no secrets staged
+- [ ] This file's **Status** changed to `Done`
+- [ ] Committed locally, no push: `feat: Add Next.js web app shell`

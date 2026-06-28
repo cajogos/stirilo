@@ -43,3 +43,23 @@ Document a safe future command-execution model. **No command runner is implement
 - Do not implement execution until scan, Git, API, auth, and the security model are solid and proven.
 - The web app must never run as root; no automatic sudo.
 - Required for any future runner: timeout, output size limit, redaction, audit logging.
+
+## Implementation Checklist
+
+> Design and documentation only - **no executable code** in this phase.
+
+1. [ ] Write `docs/command-runner.md`
+2. [ ] Document the allowlist + argv-validation design
+3. [ ] Document the sudo helper design (narrow sudoers entry; web process never privileged)
+4. [ ] Document redaction + audit rules for command runs
+5. [ ] Write the threat model / risk analysis, with rationale for each forbidden command
+
+## Done
+
+Mark this phase complete only when all of the following hold:
+
+- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [ ] **Verify:** `docs/command-runner.md` reviewed; confirm no command-runner code was added (`git diff` is docs-only)
+- [ ] `git status` + `git diff --staged` reviewed; no secrets staged
+- [ ] This file's **Status** changed to `Done`
+- [ ] Committed locally, no push: `docs: Add command runner design and threat model`

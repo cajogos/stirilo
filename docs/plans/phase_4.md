@@ -52,3 +52,25 @@ A metadata-only filesystem scanner that produces useful summaries of a scan targ
 - Detect sensitive files (`.env`, `.env.*`, `*.pem`, `*.key`, `id_rsa`, `id_ed25519`, `*.p12`, `*.pfx`, `*.kdbx`, secret-bearing `*.sqlite`/`*.db`) by metadata only.
 - Never read, ingest, display, log, or store secret file contents.
 - Apply the redaction package to any captured output before storage.
+
+## Implementation Checklist
+
+1. [ ] Create `packages/scanner` using only `stat`/`readdir`/`lstat`
+2. [ ] Add a lint rule banning `fs.readFile`/`open` on target files in `packages/scanner`
+3. [ ] Implement traversal with ignored-dir pruning + bounded async concurrency
+4. [ ] Compute file/directory count, total size, top-N largest and recently modified files
+5. [ ] Implement sensitive-file marker detection (metadata only)
+6. [ ] Implement package/project file detection
+7. [ ] Add `scan_runs` usage + the manual scan action
+8. [ ] Surface the scan summary on the dashboard
+9. [ ] Tests: scan a temp dir; spy on `fs` to prove sensitive files are never read
+
+## Done
+
+Mark this phase complete only when all of the following hold:
+
+- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [ ] **Verify:** `pnpm test` passes, including the never-read spy test and the ignored-dir test
+- [ ] `git status` + `git diff --staged` reviewed; no scanned secret contents or DB files staged
+- [ ] This file's **Status** changed to `Done`
+- [ ] Committed locally, no push: `feat: Add metadata-only filesystem scanner`

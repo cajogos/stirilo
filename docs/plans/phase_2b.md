@@ -49,3 +49,24 @@ Single-user authentication with sessions and logout, an audit log, and the share
 - Cookie: `httpOnly`, `sameSite=lax`, `secure` in production, server-side validation.
 - The HTTP API will use a **separate** `STIRILO_AGENT_TOKEN` (Phase 7), distinct from the user session.
 - Never expose `process.env` through any route. Never log secrets in the audit log.
+
+## Implementation Checklist
+
+1. [ ] Add the `sessions` and `audit_log` table schemas + migration
+2. [ ] Create `packages/redaction` with deterministic `[REDACTED]` output
+3. [ ] Create `packages/auth`: argon2id hasher behind a `PasswordHasher` interface
+4. [ ] Implement login (timing-safe), session creation (`crypto.randomBytes`, store hash), HTTP-only cookie
+5. [ ] Implement logout
+6. [ ] Wire the Phase 1 middleware to real server-side session validation
+7. [ ] Write audit entries for login success/failure and logout
+8. [ ] Tests: auth hash verification + redaction real-shaped fixtures (PAT/AWS/JWT/DB-URL)
+
+## Done
+
+Mark this phase complete only when all of the following hold:
+
+- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [ ] **Verify:** `pnpm test` (auth + redaction) passes; manual login → refresh → logout works; audit log shows the events
+- [ ] `git status` + `git diff --staged` reviewed; no secrets or session data staged
+- [ ] This file's **Status** changed to `Done`
+- [ ] Committed locally, no push: `feat: Add single-user auth, audit log, and redaction`

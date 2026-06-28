@@ -57,3 +57,27 @@ Stand up an installable, lintable, testable pnpm monorepo that is safe to publis
 - Root `.gitignore` must exist before any secret-bearing or generated file is introduced.
 - `.env.example` carries placeholders only, never real values.
 - License is **MIT**.
+
+## Implementation Checklist
+
+1. [ ] Initialise the pnpm workspace: `pnpm-workspace.yaml` + root `package.json` with workspace scripts
+2. [ ] Add toolchain pins: `.nvmrc` (Node 22), `packageManager` field, `engines`
+3. [ ] Add root + per-package `tsconfig.json` (strict mode + project references)
+4. [ ] Configure ESLint flat config (`eslint.config.js`) with `@stylistic` Allman + semicolon rules
+5. [ ] Add root `.gitignore` covering `.env*`, `*.db*`, `*.sqlite*`, `*.pem`, `*.key`, `data/*` (except `.gitkeep`), build output
+6. [ ] Add `.env.example` with placeholders only
+7. [ ] Add `LICENSE` (MIT), `SECURITY.md`, `CONTRIBUTING.md`
+8. [ ] Create empty `packages/*` and `apps/web/` skeletons (`package.json` only) and `data/.gitkeep`
+9. [ ] Add gitleaks config, a pre-commit hook (lefthook/husky), and `commitlint`
+10. [ ] Add the GitHub Actions workflow (install/lint/typecheck/test/build/gitleaks)
+11. [ ] Run the verification chain and fix any failures
+
+## Done
+
+Mark this phase complete only when all of the following hold:
+
+- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [ ] **Verify:** `pnpm install && pnpm lint && pnpm typecheck && pnpm test && pnpm build && gitleaks detect` all pass
+- [ ] `git status` + `git diff --staged` reviewed; no secrets or DB files staged; PRD PDF still ignored
+- [ ] This file's **Status** changed to `Done`
+- [ ] Committed locally, no push: `build: Scaffold pnpm workspace foundation`

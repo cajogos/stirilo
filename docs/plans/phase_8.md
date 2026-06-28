@@ -54,3 +54,21 @@ A read-only MCP server that lets AI agents query local system state safely, by t
 
 - MCP v1 is read-only; do not expose command execution.
 - All access flows through the HTTP API so redaction/audit/auth remain centralized.
+
+## Implementation Checklist
+
+1. [ ] Create `packages/mcp` using `@modelcontextprotocol/sdk` over stdio
+2. [ ] Add an HTTP API client (agent token) for the server
+3. [ ] Implement the read-only tools, reusing the Phase 7 Zod/OpenAPI schemas
+4. [ ] Write the configuration docs (`docs/mcp.md`)
+5. [ ] Tests: agent can call health, list scan targets, list repos, get git status; no command execution exists
+
+## Done
+
+Mark this phase complete only when all of the following hold:
+
+- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [ ] **Verify:** `pnpm test` passes; an MCP client can call the read-only tools and cannot execute commands
+- [ ] `git status` + `git diff --staged` reviewed; no agent token or secrets staged
+- [ ] This file's **Status** changed to `Done`
+- [ ] Committed locally, no push: `feat: Add read-only MCP server`
