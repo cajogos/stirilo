@@ -1,6 +1,6 @@
 # Phase 6: Dashboard v1
 
-**Status:** Not started
+**Status:** Done
 **Depends on:** Phase 5
 **PRD reference:** Milestone 6, Implementation Order step 11
 
@@ -27,16 +27,16 @@ A useful at-a-glance dashboard that summarizes scan and Git data, with proper em
 
 ## Deliverables
 
-- [ ] Dashboard cards for each summary above
-- [ ] Empty state (before any scans)
-- [ ] Loading states
-- [ ] Error states
+- [x] Dashboard cards for each summary above
+- [x] Empty state (before any scans)
+- [x] Loading states
+- [x] Error states
 
 ## Acceptance criteria
 
-- [ ] Dashboard gives a useful overview after scans
-- [ ] Empty state works before scans
-- [ ] Loading and error states work
+- [x] Dashboard gives a useful overview after scans
+- [x] Empty state works before scans
+- [x] Loading and error states work
 
 ## Recommendations / Watch-outs
 
@@ -48,17 +48,17 @@ A useful at-a-glance dashboard that summarizes scan and Git data, with proper em
 
 ## Implementation Checklist
 
-1. [ ] Add server-layer aggregation queries (SQL counts/summaries)
-2. [ ] Build the dashboard cards: tracked dirs, repos, dirty repos, last scan, sensitive markers, large files, recent changes, system health
-3. [ ] Implement empty, loading, and error states
-4. [ ] Add tests/E2E covering dashboard render and the empty state
+1. [x] Add server-layer aggregation queries (SQL counts/summaries)
+2. [x] Build the dashboard cards: tracked dirs, repos, dirty repos, last scan, sensitive markers, large files, recent changes, system health
+3. [x] Implement empty, loading, and error states
+4. [x] Add tests/E2E covering dashboard render and the empty state
 
 ## Done
 
 Mark this phase complete only when all of the following hold:
 
-- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
-- [ ] **Verify:** `pnpm test:e2e` passes; dashboard shows a useful overview after scans and a clean empty state before
-- [ ] `git status` + `git diff --staged` reviewed; no secrets staged
-- [ ] This file's **Status** changed to `Done`
-- [ ] Committed locally, no push: `feat: Add dashboard summary`
+- [x] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [x] **Verify:** `pnpm test:e2e` passes; dashboard shows a useful overview after scans and a clean empty state before
+- [x] `git status` + `git diff --staged` reviewed; no secrets staged
+- [x] This file's **Status** changed to `Done`
+- [x] Committed locally, no push: `feat: Add dashboard summary`

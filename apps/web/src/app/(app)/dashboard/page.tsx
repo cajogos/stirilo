@@ -1,11 +1,13 @@
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/states";
-import { getLatestScanRun, parseSummary } from "@/server/scans";
+import { getDashboardData } from "@/server/dashboard";
+import { getSystemSummary } from "@/server/system";
 import { formatBytes } from "@/lib/format";
 
 function StatCard({ label, value }: { label: string; value: string })
@@ -22,8 +24,8 @@ function StatCard({ label, value }: { label: string; value: string })
 
 export default function DashboardPage()
 {
-  const latest = getLatestScanRun();
-  const summary = parseSummary(latest);
+  const data = getDashboardData();
+  const system = getSystemSummary();
 
   return (
     <div className="space-y-6">
@@ -34,19 +36,67 @@ export default function DashboardPage()
         </p>
       </div>
 
-      {summary ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard label="Files (last scan)" value={String(summary.fileCount)} />
-          <StatCard
-            label="Directories"
-            value={String(summary.directoryCount)}
-          />
-          <StatCard label="Total size" value={formatBytes(summary.totalSize)} />
-          <StatCard
-            label="Sensitive markers"
-            value={String(summary.sensitiveMarkers.length)}
-          />
-        </div>
+      {data.hasData ? (
+        <>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <StatCard
+              label="Tracked directories"
+              value={String(data.scanTargetCount)}
+            />
+            <StatCard
+              label="Git repositories"
+              value={String(data.repoCount)}
+            />
+            <StatCard
+              label="Dirty repositories"
+              value={String(data.dirtyRepoCount)}
+            />
+            <StatCard
+              label="Last scan"
+              value={data.lastScanStatus ?? "Never"}
+            />
+            <StatCard
+              label="Sensitive markers"
+              value={String(data.sensitiveMarkerCount)}
+            />
+            <StatCard
+              label="Files (last scan)"
+              value={String(data.fileCount)}
+            />
+            <StatCard
+              label="Total size (last scan)"
+              value={formatBytes(data.totalSize)}
+            />
+            <StatCard
+              label="Largest file"
+              value={
+                data.largestFile
+                  ? formatBytes(data.largestFile.size)
+                  : "-"
+              }
+            />
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>System</CardTitle>
+              <CardDescription>
+                Read-only, non-privileged host information.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-2 text-sm sm:grid-cols-2">
+              <span>Host: {system.hostname}</span>
+              <span>
+                Platform: {system.platform} ({system.arch})
+              </span>
+              <span>Node: {system.nodeVersion}</span>
+              <span>
+                Memory: {formatBytes(system.totalMemory - system.freeMemory)} /{" "}
+                {formatBytes(system.totalMemory)}
+              </span>
+            </CardContent>
+          </Card>
+        </>
       ) : (
         <EmptyState
           title="No scans yet"
