@@ -72,4 +72,4 @@ pnpm gitleaks     # scan for committed secrets
 
 ## License
 
-TBD.
+MIT.

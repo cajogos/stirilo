@@ -38,6 +38,10 @@ A useful at-a-glance dashboard that summarizes scan and Git data, with proper em
 - [ ] Empty state works before scans
 - [ ] Loading and error states work
 
+## Recommendations / Watch-outs
+
+- **Compute counts and summaries with SQL in the db/server layer**, not by recomputing client-side. Keep empty/loading/error as first-class states; the empty (first-run) state is what most dashboards get wrong.
+
 ## Safety notes
 
 - Surface counts and summaries only; never render sensitive file contents or environment values.

@@ -45,6 +45,11 @@ A read-only MCP server that lets AI agents query local system state safely, by t
 - [ ] Agent can get Git status
 - [ ] MCP cannot execute commands
 
+## Recommendations / Watch-outs
+
+- Use the official **`@modelcontextprotocol/sdk`** over stdio for local agents, as a **thin pass-through** to the HTTP API (keeps auth/redaction/audit centralized).
+- Reuse the Zod/OpenAPI source from Phase 7 for the tool schemas instead of hand-writing them.
+
 ## Safety notes
 
 - MCP v1 is read-only; do not expose command execution.

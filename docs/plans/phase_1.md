@@ -41,6 +41,12 @@ A running Next.js application with the visual shell in place: layout, navigation
 - [ ] Dashboard renders after (stubbed) login
 - [ ] Basic Playwright smoke test passes
 
+## Recommendations / Watch-outs
+
+- **Do the unauthenticated redirect in Next.js middleware**, behind a swappable stub seam, so Phase 2b drops in real server-side session validation without restructuring.
+- **Set the dev port to 3157** to match the PRD and `.env.example` (not Next's default 3000).
+- Use **`next-themes`** for the dark-mode requirement.
+
 ## Safety notes
 
 - Default bind address `127.0.0.1`; do not bind to LAN.

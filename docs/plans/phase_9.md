@@ -34,6 +34,10 @@ Document a safe future command-execution model. **No command runner is implement
 - [ ] Future command model is documented
 - [ ] Security boundaries are explicit
 
+## Recommendations / Watch-outs
+
+- The deliverable is a real **threat model**, not a sketch: an allowlist (argv-validated) plus a separately-installed helper invoked via a **narrow sudoers entry for specific argv**. The web process must never hold privilege. Document *why* each forbidden command is forbidden.
+
 ## Safety notes
 
 - Do not implement execution until scan, Git, API, auth, and the security model are solid and proven.

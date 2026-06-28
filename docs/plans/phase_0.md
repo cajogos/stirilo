@@ -12,12 +12,14 @@ Stand up an installable, lintable, testable pnpm monorepo that is safe to publis
 
 - pnpm workspace (`pnpm-workspace.yaml`, root `package.json`)
 - Shared TypeScript config (root `tsconfig.json` + per-package extends)
-- ESLint with stylistic rules enforcing Allman braces + semicolons (**no Prettier**, see CLAUDE.md)
+- ESLint **flat config** (`eslint.config.js`) with stylistic rules enforcing Allman braces + semicolons (**no Prettier**, see CLAUDE.md)
+- TypeScript **strict mode** + monorepo **project references**
+- Toolchain pinning: `.nvmrc` (Node 22), `packageManager` field (corepack-pinned pnpm), `engines` in root `package.json`
 - GitHub Actions CI workflow
-- gitleaks config + CI step
+- gitleaks config + CI step **and** a pre-commit hook (lefthook or husky), plus `commitlint` to enforce commit-type rules
 - Root `.gitignore` (must cover `.env*`, `*.db`, `*.db-*`, `*.sqlite`, `*.sqlite3`, `*.pem`, `*.key`, `data/*` except `.gitkeep`, build output)
 - `.env.example` with placeholder values only
-- `LICENSE`, `SECURITY.md`, `CONTRIBUTING.md`
+- `LICENSE` (**MIT**), `SECURITY.md`, `CONTRIBUTING.md`
 - Empty `packages/*` and `apps/web/` skeletons (directory + `package.json` only, no feature code)
 - `data/.gitkeep`
 
@@ -30,14 +32,16 @@ Stand up an installable, lintable, testable pnpm monorepo that is safe to publis
 ## Deliverables
 
 - [ ] `pnpm-workspace.yaml` + root `package.json` with workspace scripts
-- [ ] Root + package `tsconfig.json`
-- [ ] ESLint config with `@stylistic` rules (Allman braces, semicolons)
+- [ ] Root + package `tsconfig.json` (strict mode + project references)
+- [ ] ESLint flat config with `@stylistic` rules (Allman braces, semicolons)
+- [ ] Toolchain pinning: `.nvmrc`, `packageManager`, `engines`
 - [ ] `.gitignore` (root) covering all secret/db/generated artefacts
 - [ ] `.env.example` (placeholders only)
-- [ ] `LICENSE` (license choice still TBD, confirm with Carlos)
+- [ ] `LICENSE` (MIT)
 - [ ] `SECURITY.md`, `CONTRIBUTING.md`
 - [ ] GitHub Actions workflow running install/lint/typecheck/test/build/gitleaks
-- [ ] gitleaks configuration
+- [ ] gitleaks configuration + pre-commit hook (lefthook/husky)
+- [ ] `commitlint` enforcing commit-type rules
 
 ## Acceptance criteria
 
@@ -52,4 +56,4 @@ Stand up an installable, lintable, testable pnpm monorepo that is safe to publis
 
 - Root `.gitignore` must exist before any secret-bearing or generated file is introduced.
 - `.env.example` carries placeholders only, never real values.
-- Confirm license choice with Carlos before committing `LICENSE`.
+- License is **MIT**.

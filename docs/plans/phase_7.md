@@ -48,6 +48,13 @@ An authenticated, read-first local HTTP API that exposes Stirilo's data with a s
 - [ ] API returns structured JSON
 - [ ] API tests pass
 
+## Recommendations / Watch-outs
+
+- **Share the service layer with the UI's server actions** - the API must not reimplement scan/git logic. One source of truth, validated once.
+- **Centralize the error shape** in one handler/middleware; **constant-time compare** the agent token via a Bearer header.
+- Use **`zod-to-openapi`** to auto-generate `docs/api.md` and to feed the Phase 8 MCP tool schemas from one Zod source.
+- **Audit mutations only** (not every read) to avoid noisy `API token used` entries per request.
+
 ## Safety notes
 
 - Do not expose secrets, `.env` contents, raw session data, or raw agent tokens.

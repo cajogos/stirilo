@@ -38,6 +38,12 @@ Detect Git repositories under scan targets and capture their status, with remote
 - [ ] Remote URLs are sanitized
 - [ ] Tests cover token-containing remote URLs
 
+## Recommendations / Watch-outs
+
+- **Use `execFile` with argument arrays** (no shell, no libraries that shell out). `status`/`log`/`rev-parse` do not trigger hooks, but add `-c core.hooksPath=/dev/null` as belt-and-suspenders.
+- **Sanitize both remote forms:** URL form (`https://token@host/...`, strip userinfo) and scp-like form (`git@host:path`, which is not a parseable URL). Test both, plus the token-in-URL case.
+- **Coordinate detection vs enrichment:** the scanner (Phase 4) detects `.git` presence; this package enriches. Do not duplicate the directory walk.
+
 ## Safety notes
 
 - Strip credentials from remotes (`https://token@host/...`, `https://user:pass@host/...`). Never store tokens or passwords.

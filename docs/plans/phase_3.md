@@ -1,7 +1,7 @@
 # Phase 3: Scan Targets
 
 **Status:** Not started
-**Depends on:** Phase 2
+**Depends on:** Phase 2b
 **PRD reference:** Milestone 3, Implementation Order step 8
 
 ## Goal
@@ -39,6 +39,14 @@ Let the user register local directories as scan targets, with strict path valida
 - [ ] Scan target is stored in SQLite
 - [ ] Scan target appears in the UI
 - [ ] Scan targets can be listed programmatically (formal API in Phase 7)
+
+## Recommendations / Watch-outs
+
+This is the highest-risk validation in the project. Get all three right:
+
+- **Canonicalize with `fs.realpath`** (resolve symlinks and `..`) **before** the blocklist check, and store the canonical absolute path. Otherwise a symlink (e.g. `~/projects/x -> /`) or `..` traversal bypasses the blocklist.
+- **Segment-aware blocklist matching**, not string prefix: `/home` must not match `/home-secrets`, and `/` must not match everything by naive prefix.
+- **Expand `~` explicitly** and validate against the resolved real path.
 
 ## Safety notes
 

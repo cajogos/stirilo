@@ -38,16 +38,21 @@ Harden, document, and tag v0.1: a project that a developer can clone, configure,
 - [ ] Project is safe to publish publicly
 - [ ] v0.1 provides: local dashboard, SQLite persistence, directory scanning, Git status, HTTP API, and optional MCP
 
+## Recommendations / Watch-outs
+
+- **Run `gitleaks` over the full history** (`gitleaks detect`), not just the working tree, as the last gate before any push. This is the final check before the repo could go public.
+- **Tag `v0.1.0`** (semver), and treat the tag as the decision point to revisit the "don't push yet" hold.
+
 ## Release verification (run before tagging)
 
 - [ ] `pnpm lint`
 - [ ] `pnpm typecheck`
 - [ ] `pnpm test`
 - [ ] `pnpm build`
-- [ ] `gitleaks scan` (no secrets in working tree **or history**)
+- [ ] `gitleaks detect` over full history (no secrets in working tree **or history**)
 
 ## Safety notes
 
 - Do **not** push to GitHub until Carlos explicitly approves the public release.
 - Re-confirm no secrets exist anywhere in git history before any publish.
-- Confirm the license before release (still TBD).
+- License is **MIT**.

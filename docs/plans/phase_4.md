@@ -41,6 +41,12 @@ A metadata-only filesystem scanner that produces useful summaries of a scan targ
 - [ ] Dashboard shows the scan summary
 - [ ] Tests **prove** sensitive files are detected without being read
 
+## Recommendations / Watch-outs
+
+- **Make "never reads contents" an architectural guarantee, not a discipline.** The scanner only ever calls `stat`/`readdir`/`lstat`, never `readFile`/`open` on a target file. Enforce with a lint rule banning `fs.readFile` in `packages/scanner` plus a test that spies on `fs` to assert no read happened. This is the strongest defense for the headline safety claim.
+- **Prune ignored directories during traversal** (do not descend `node_modules`/`.git` then discard) - correctness and performance.
+- **Bound largest/recent file lists to top-N** and use bounded async concurrency to cap memory on huge trees.
+
 ## Safety notes
 
 - Detect sensitive files (`.env`, `.env.*`, `*.pem`, `*.key`, `id_rsa`, `id_ed25519`, `*.p12`, `*.pfx`, `*.kdbx`, secret-bearing `*.sqlite`/`*.db`) by metadata only.

@@ -8,7 +8,8 @@ The PRD (`prd.pdf`, gitignored) is the reference for *what*; Carlos's convention
 | --- | --- | --- |
 | [0](phase_0.md) | Repository Foundation | pnpm workspace, tooling, CI, gitleaks, security docs |
 | [1](phase_1.md) | Web App Shell | Next.js, Tailwind, shadcn/ui, layout, placeholder pages |
-| [2](phase_2.md) | SQLite Persistence & Auth | Drizzle, config validation, single-user login, audit log, redaction |
+| [2a](phase_2a.md) | Persistence & Config | Drizzle, migrations, settings, Zod env validation |
+| [2b](phase_2b.md) | Auth, Audit & Redaction | Single-user login, sessions, audit log, redaction |
 | [3](phase_3.md) | Scan Targets | Directory targets, path validation, blocklist |
 | [4](phase_4.md) | Filesystem Scanner | Metadata-only scan, sensitive-file markers |
 | [5](phase_5.md) | Git Scanner | Repo detection, status snapshots, remote sanitization |
