@@ -14,6 +14,7 @@ export default defineConfig({
       "@stirilo/redaction": pkg("redaction"),
       "@stirilo/scanner": pkg("scanner"),
       "@stirilo/git": pkg("git"),
+      "@stirilo/mcp": pkg("mcp"),
     },
   },
   test: {

@@ -1,6 +1,6 @@
 # Phase 8: MCP Server v1
 
-**Status:** Not started
+**Status:** Done
 **Depends on:** Phase 7
 **PRD reference:** Milestone 8, Implementation Order step 13
 
@@ -32,18 +32,18 @@ A read-only MCP server that lets AI agents query local system state safely, by t
 
 ## Deliverables
 
-- [ ] MCP server process under `packages/mcp/`
-- [ ] HTTP API client wiring (uses agent token)
-- [ ] Read-only tools listed above
-- [ ] Configuration documentation
+- [x] MCP server process under `packages/mcp/`
+- [x] HTTP API client wiring (uses agent token)
+- [x] Read-only tools listed above
+- [x] Configuration documentation
 
 ## Acceptance criteria
 
-- [ ] Agent can call `stirilo_health`
-- [ ] Agent can list scan targets
-- [ ] Agent can list Git repositories
-- [ ] Agent can get Git status
-- [ ] MCP cannot execute commands
+- [x] Agent can call `stirilo_health`
+- [x] Agent can list scan targets
+- [x] Agent can list Git repositories
+- [x] Agent can get Git status
+- [x] MCP cannot execute commands
 
 ## Recommendations / Watch-outs
 
@@ -57,18 +57,18 @@ A read-only MCP server that lets AI agents query local system state safely, by t
 
 ## Implementation Checklist
 
-1. [ ] Create `packages/mcp` using `@modelcontextprotocol/sdk` over stdio
-2. [ ] Add an HTTP API client (agent token) for the server
-3. [ ] Implement the read-only tools, reusing the Phase 7 Zod/OpenAPI schemas
-4. [ ] Write the configuration docs (`docs/mcp.md`)
-5. [ ] Tests: agent can call health, list scan targets, list repos, get git status; no command execution exists
+1. [x] Create `packages/mcp` using `@modelcontextprotocol/sdk` over stdio
+2. [x] Add an HTTP API client (agent token) for the server
+3. [x] Implement the read-only tools, reusing the Phase 7 Zod/OpenAPI schemas
+4. [x] Write the configuration docs (`docs/mcp.md`)
+5. [x] Tests: agent can call health, list scan targets, list repos, get git status; no command execution exists
 
 ## Done
 
 Mark this phase complete only when all of the following hold:
 
-- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
-- [ ] **Verify:** `pnpm test` passes; an MCP client can call the read-only tools and cannot execute commands
-- [ ] `git status` + `git diff --staged` reviewed; no agent token or secrets staged
-- [ ] This file's **Status** changed to `Done`
-- [ ] Committed locally, no push: `feat: Add read-only MCP server`
+- [x] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [x] **Verify:** `pnpm test` passes; an MCP client can call the read-only tools and cannot execute commands
+- [x] `git status` + `git diff --staged` reviewed; no agent token or secrets staged
+- [x] This file's **Status** changed to `Done`
+- [x] Committed locally, no push: `feat: Add read-only MCP server`
