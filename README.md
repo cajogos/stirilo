@@ -4,7 +4,7 @@ A self-hosted, local-first system control dashboard for developers.
 
 Stirilo runs on your own machine and helps you inspect and understand your local development environment: directory scan targets, filesystem metadata, Git repositories and their status, sensitive-file markers, and basic system health. It surfaces this through a web UI, an authenticated local HTTP API, and a read-only MCP server so AI agents can query system state safely.
 
-> Status: v0.1. Local dashboard, SQLite persistence, directory scanning, Git status, HTTP API, and MCP server.
+> Status: v0.1+. Local dashboard, SQLite persistence, directory scanning with insight reports (disk reclamation, duplicate candidates, project inventory), Git status with a cross-repo at-risk view, scan history/diffs and health trends, interval scheduling with redacted webhook alerts, an authenticated rate-limited HTTP API, and a read-only MCP server.
 
 ## Principles
 
@@ -67,6 +67,7 @@ pnpm lint         # lint
 pnpm typecheck    # type check
 pnpm test         # unit/integration tests (Vitest)
 pnpm test:e2e     # end-to-end tests (Playwright)
+pnpm docs:api     # regenerate docs/api.md + docs/openapi.json from the Zod contract
 pnpm db:generate  # generate a Drizzle migration
 pnpm db:migrate   # apply migrations
 ```

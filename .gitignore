@@ -20,6 +20,9 @@ blob-report/
 # Coverage / test artefacts
 coverage/
 
+# Reference PDFs (e.g. the PRD) are never committed
+*.pdf
+
 # Environment files (keep the example)
 .env*
 !.env.example
