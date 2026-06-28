@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Status
 
-Stirilo is **greenfield**. As of this writing the repo contains only `README.md` and the PRD at `docs/plans/prd.pdf`. The PRD is a strong reference for *what to build* (architecture, schema, milestones, safety model), but it is **not the source of truth for how**. Carlos's conventions (global `~/.claude/CLAUDE.md` + this file) win on any conflict. When the PRD and a convention disagree on something that matters, ask before diverging.
+Stirilo is in **early development**. Phase 0 (repository foundation) is built: pnpm workspace, TypeScript project references, ESLint flat config, package/app skeletons, CI, and tooling. Feature work proceeds through the phased plans in `docs/plans/`. The PRD at `docs/plans/prd.pdf` (gitignored) is a strong reference for *what to build* (architecture, schema, milestones, safety model), but it is **not the source of truth for how**. Carlos's conventions (global `~/.claude/CLAUDE.md` + this file) win on any conflict. When the PRD and a convention disagree on something that matters, ask before diverging.
 
 ## What Stirilo Is
 
@@ -96,7 +96,7 @@ pnpm gitleaks     # secret scan
 
 Run a single Vitest file: `pnpm test <path>` (or `pnpm vitest run <path> -t "<name>"` for one test).
 
-Before opening any PR, verify: `pnpm lint && pnpm typecheck && pnpm test && pnpm build && gitleaks scan`. CI runs the same chain.
+Before opening any PR, verify: `pnpm lint && pnpm typecheck && pnpm test && pnpm build && gitleaks dir .`. CI runs the same chain.
 
 ## Implementation Order
 

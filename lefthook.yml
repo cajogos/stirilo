@@ -1,0 +1,20 @@
+pre-commit:
+  parallel: true
+  commands:
+    gitleaks:
+      # Scan staged changes for secrets. Hard-fails if gitleaks finds something.
+      # Skips with a warning when gitleaks isn't installed (CI is the hard gate).
+      run: |
+        if command -v gitleaks >/dev/null 2>&1; then
+          gitleaks git --staged --no-banner
+        else
+          echo "WARNING: gitleaks not installed; skipping local secret scan. Install it: https://github.com/gitleaks/gitleaks"
+        fi
+    lint:
+      glob: "*.{ts,tsx,js,mjs,cjs}"
+      run: pnpm eslint {staged_files}
+
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm commitlint --edit {1}

@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Coverage / test artefacts
+coverage/
+
+# Environment files (keep the example)
+.env*
+!.env.example
+
+# Databases (never commit local data)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Keys and certificates
+*.pem
+*.key
+
+# Local data directory (keep the folder, ignore contents)
+data/*
+!data/.gitkeep
+
+# Logs and OS cruft
+*.log
+.DS_Store

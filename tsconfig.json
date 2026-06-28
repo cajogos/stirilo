@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/redaction" },
+    { "path": "./packages/db" },
+    { "path": "./packages/auth" },
+    { "path": "./packages/git" },
+    { "path": "./packages/scanner" },
+    { "path": "./packages/mcp" },
+    { "path": "./packages/command-runner" },
+    { "path": "./apps/web" }
+  ]
+}

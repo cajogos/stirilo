@@ -1,0 +1,12 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Allow these dependencies' install scripts to run (pnpm blocks them by default).
+onlyBuiltDependencies:
+  - esbuild
+  - lefthook
+
+allowBuilds:
+  esbuild: true
+  lefthook: true

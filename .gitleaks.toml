@@ -1,0 +1,12 @@
+title = "Stirilo gitleaks configuration"
+
+# Build on top of gitleaks' default ruleset.
+[extend]
+useDefault = true
+
+# The committed example carries placeholders only, never real values.
+[allowlist]
+description = "Ignore the environment example template"
+paths = [
+  '''\.env\.example$''',
+]
