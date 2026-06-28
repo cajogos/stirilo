@@ -18,6 +18,26 @@ export function getLatestScanRunForTarget(targetId: string): ScanRun | null
   return rows[0] ?? null;
 }
 
+export function listScanRuns(limit = 50): ScanRun[]
+{
+  return getDb()
+    .select()
+    .from(scanRuns)
+    .orderBy(desc(scanRuns.startedAt))
+    .limit(limit)
+    .all();
+}
+
+export function getScanRunById(id: string): ScanRun | null
+{
+  const rows = getDb()
+    .select()
+    .from(scanRuns)
+    .where(eq(scanRuns.id, id))
+    .all();
+  return rows[0] ?? null;
+}
+
 export function getLatestScanRun(): ScanRun | null
 {
   const rows = getDb()

@@ -1,70 +1,33 @@
 "use server";
 
-import { randomUUID } from "node:crypto";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { validateScanTargetPath } from "@stirilo/core";
-import { recordAudit, scanTargets } from "@stirilo/db";
-import { getDb } from "@/server/db";
 import { getCurrentSession } from "@/server/session";
-
-function backWithError(message: string, needsConfirm = false): never
-{
-  const params = new URLSearchParams({ error: message });
-  if (needsConfirm)
-  {
-    params.set("confirm", "1");
-  }
-  redirect(`/scan-targets?${params.toString()}`);
-}
+import { createScanTargetRecord } from "@/server/services/scan-targets-service";
 
 export async function createScanTarget(formData: FormData): Promise<void>
 {
-  const name = String(formData.get("name") ?? "").trim();
-  const pathInput = String(formData.get("path") ?? "").trim();
+  const name = String(formData.get("name") ?? "");
+  const path = String(formData.get("path") ?? "");
   const confirm = formData.get("confirm") === "on";
+  const session = await getCurrentSession();
 
-  if (!name || !pathInput)
-  {
-    backWithError("Name and path are both required.");
-  }
+  const result = createScanTargetRecord({
+    name,
+    path,
+    confirm,
+    actor: session?.username ?? "(unknown)",
+  });
 
-  const result = validateScanTargetPath(pathInput, { confirm });
   if (!result.ok)
   {
-    backWithError(result.reason, result.requiresConfirmation === true);
+    const params = new URLSearchParams({ error: result.message });
+    if (result.code === "CONFIRMATION_REQUIRED")
+    {
+      params.set("confirm", "1");
+    }
+    redirect(`/scan-targets?${params.toString()}`);
   }
-
-  const session = await getCurrentSession();
-  const db = getDb();
-  const id = randomUUID();
-  const now = new Date().toISOString();
-
-  try
-  {
-    db.insert(scanTargets)
-      .values({
-        id,
-        name,
-        path: result.canonicalPath,
-        enabled: true,
-        createdAt: now,
-        updatedAt: now,
-      })
-      .run();
-  }
-  catch
-  {
-    backWithError("A scan target with that path already exists.");
-  }
-
-  recordAudit(db, {
-    actor: session?.username ?? "(unknown)",
-    action: "scan_target_created",
-    targetType: "scan_target",
-    targetId: id,
-    metadata: { path: result.canonicalPath },
-  });
 
   revalidatePath("/scan-targets");
   redirect("/scan-targets");

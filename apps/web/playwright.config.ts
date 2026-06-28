@@ -42,6 +42,7 @@ export default defineConfig({
         "$argon2id$v=19$m=19456,t=2,p=1$qKWdXixdua4QKEitnLkzEw$YnREw1dDBlBTwIhdoLm0AKnXcXAFrKwUFHkXAInSWXs",
       STIRILO_SESSION_SECRET: "e2e-only-session-secret-value",
       STIRILO_DB_PATH: "/tmp/stirilo-e2e/test.db",
+      STIRILO_AGENT_TOKEN: "e2e-agent-token-value",
     },
   },
 });
