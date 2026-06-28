@@ -55,4 +55,10 @@ test("runs a scan and shows the metadata summary", async ({ page }) =>
   await expect(page.getByText("Latest scan")).toBeVisible({ timeout: 20_000 });
   // The detected .env in the fixture should surface as a sensitive marker.
   await expect(page.getByText(/Sensitive markers/)).toBeVisible();
+
+  // The fixture is a git repository, so the scan should detect it.
+  await page.goto("/git");
+  await expect(
+    page.getByRole("link", { name: "stirilo-scan-fixture" }),
+  ).toBeVisible({ timeout: 20_000 });
 });

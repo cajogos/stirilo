@@ -72,3 +72,39 @@ export const scanRuns = sqliteTable("scan_runs", {
 
 export type ScanRun = typeof scanRuns.$inferSelect;
 export type NewScanRun = typeof scanRuns.$inferInsert;
+
+// Detected Git repositories. Remote URLs are stored sanitized (no credentials).
+export const gitRepositories = sqliteTable("git_repositories", {
+  id: text("id").primaryKey(),
+  scanTargetId: text("scan_target_id"),
+  path: text("path").notNull().unique(),
+  sanitizedRemoteUrl: text("sanitized_remote_url"),
+  remoteHost: text("remote_host"),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+export type GitRepositoryRow = typeof gitRepositories.$inferSelect;
+export type NewGitRepositoryRow = typeof gitRepositories.$inferInsert;
+
+// Point-in-time status of a Git repository.
+export const gitStatusSnapshots = sqliteTable("git_status_snapshots", {
+  id: text("id").primaryKey(),
+  gitRepositoryId: text("git_repository_id")
+    .notNull()
+    .references(() => gitRepositories.id),
+  branch: text("branch"),
+  isDirty: integer("is_dirty", { mode: "boolean" }).notNull().default(false),
+  stagedCount: integer("staged_count").notNull().default(0),
+  unstagedCount: integer("unstaged_count").notNull().default(0),
+  untrackedCount: integer("untracked_count").notNull().default(0),
+  aheadCount: integer("ahead_count").notNull().default(0),
+  behindCount: integer("behind_count").notNull().default(0),
+  lastCommitHash: text("last_commit_hash"),
+  lastCommitSubject: text("last_commit_subject"),
+  lastCommitDate: text("last_commit_date"),
+  createdAt: text("created_at").notNull(),
+});
+
+export type GitStatusSnapshot = typeof gitStatusSnapshots.$inferSelect;
+export type NewGitStatusSnapshot = typeof gitStatusSnapshots.$inferInsert;

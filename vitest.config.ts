@@ -13,6 +13,7 @@ export default defineConfig({
       "@stirilo/auth": pkg("auth"),
       "@stirilo/redaction": pkg("redaction"),
       "@stirilo/scanner": pkg("scanner"),
+      "@stirilo/git": pkg("git"),
     },
   },
   test: {

@@ -1,6 +1,6 @@
 # Phase 5: Git Scanner
 
-**Status:** Not started
+**Status:** Done
 **Depends on:** Phase 4
 **PRD reference:** Milestone 5, Implementation Order step 10
 
@@ -24,19 +24,19 @@ Detect Git repositories under scan targets and capture their status, with remote
 
 ## Deliverables
 
-- [ ] Git package with repo detection
-- [ ] `git_repositories` + `git_status_snapshots` tables
-- [ ] Branch, dirty status, staged/unstaged/untracked, ahead/behind, last commit hash/subject/date
-- [ ] Remote URL sanitization (unit tested)
-- [ ] Git repo list + detail pages
+- [x] Git package with repo detection
+- [x] `git_repositories` + `git_status_snapshots` tables
+- [x] Branch, dirty status, staged/unstaged/untracked, ahead/behind, last commit hash/subject/date
+- [x] Remote URL sanitization (unit tested)
+- [x] Git repo list + detail pages
 
 ## Acceptance criteria
 
-- [ ] Scan detects Git repositories
-- [ ] Repo status is displayed
-- [ ] Dirty repositories are highlighted
-- [ ] Remote URLs are sanitized
-- [ ] Tests cover token-containing remote URLs
+- [x] Scan detects Git repositories
+- [x] Repo status is displayed
+- [x] Dirty repositories are highlighted
+- [x] Remote URLs are sanitized
+- [x] Tests cover token-containing remote URLs
 
 ## Recommendations / Watch-outs
 
@@ -53,20 +53,20 @@ Detect Git repositories under scan targets and capture their status, with remote
 
 ## Implementation Checklist
 
-1. [ ] Create `packages/git` using `execFile` with arg arrays + `-c core.hooksPath=/dev/null`
-2. [ ] Implement repo detection, consuming the scanner's `.git` detection (no duplicate walk)
-3. [ ] Add the `git_repositories` and `git_status_snapshots` tables + migration
-4. [ ] Capture branch, dirty status, staged/unstaged/untracked, ahead/behind, last commit info
-5. [ ] Implement remote URL sanitization for URL form and scp-like form
-6. [ ] Add the `/git` list page and `/git/:id` detail page
-7. [ ] Tests: remote sanitization including token-containing remotes (both forms)
+1. [x] Create `packages/git` using `execFile` with arg arrays + `-c core.hooksPath=/dev/null`
+2. [x] Implement repo detection, consuming the scanner's `.git` detection (no duplicate walk)
+3. [x] Add the `git_repositories` and `git_status_snapshots` tables + migration
+4. [x] Capture branch, dirty status, staged/unstaged/untracked, ahead/behind, last commit info
+5. [x] Implement remote URL sanitization for URL form and scp-like form
+6. [x] Add the `/git` list page and `/git/:id` detail page
+7. [x] Tests: remote sanitization including token-containing remotes (both forms)
 
 ## Done
 
 Mark this phase complete only when all of the following hold:
 
-- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
-- [ ] **Verify:** `pnpm test` passes; a scan detects repos, dirty ones are highlighted, remotes are sanitized
-- [ ] `git status` + `git diff --staged` reviewed; no remote credentials or secrets staged
-- [ ] This file's **Status** changed to `Done`
-- [ ] Committed locally, no push: `feat: Add git scanner with remote sanitization`
+- [x] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [x] **Verify:** `pnpm test` passes; a scan detects repos, dirty ones are highlighted, remotes are sanitized
+- [x] `git status` + `git diff --staged` reviewed; no remote credentials or secrets staged
+- [x] This file's **Status** changed to `Done`
+- [x] Committed locally, no push: `feat: Add git scanner with remote sanitization`

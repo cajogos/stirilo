@@ -53,6 +53,9 @@ importers:
       '@stirilo/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@stirilo/git':
+        specifier: workspace:*
+        version: link:../../packages/git
       '@stirilo/redaction':
         specifier: workspace:*
         version: link:../../packages/redaction
@@ -165,7 +168,11 @@ importers:
         specifier: ^0.30.1
         version: 0.30.6
 
-  packages/git: {}
+  packages/git:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.10.5
+        version: 22.20.0
 
   packages/mcp: {}
 
