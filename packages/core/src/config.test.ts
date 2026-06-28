@@ -50,4 +50,10 @@ describe("loadConfig", () =>
   {
     expect(() => loadConfig({})).toThrow(/STIRILO_USERNAME/);
   });
+
+  it("treats an empty optional agent token as unset", () =>
+  {
+    const config = loadConfig({ ...required, STIRILO_AGENT_TOKEN: "" });
+    expect(config.STIRILO_AGENT_TOKEN).toBeUndefined();
+  });
 });

@@ -1,6 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const PORT = 3157;
+// Use a dedicated port (not the dev default 3157) so the e2e server never
+// collides with a running `pnpm dev`, which reuseExistingServer would otherwise
+// pick up with the wrong environment.
+const PORT = Number(process.env.E2E_PORT ?? 3211);
 const BASE_URL = `http://127.0.0.1:${PORT}`;
 
 export default defineConfig({
@@ -21,7 +24,7 @@ export default defineConfig({
   ],
   webServer: {
     // Use a production build for deterministic timing (no per-route dev compile).
-    command: "pnpm build && pnpm start",
+    command: `pnpm build && pnpm exec next start -p ${PORT} -H 127.0.0.1`,
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,

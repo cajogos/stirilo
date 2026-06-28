@@ -12,7 +12,11 @@ export const configSchema = z.object({
   STIRILO_SESSION_SECRET: z
     .string()
     .min(16, "STIRILO_SESSION_SECRET must be at least 16 characters"),
-  STIRILO_AGENT_TOKEN: z.string().min(1).optional(),
+  // Treat an empty string as unset so a blank `.env` line is allowed.
+  STIRILO_AGENT_TOKEN: z.preprocess(
+    (value) => (value === "" ? undefined : value),
+    z.string().min(1).optional(),
+  ),
 });
 
 export type Config = z.infer<typeof configSchema>;
