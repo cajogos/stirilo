@@ -32,6 +32,10 @@ export default function SettingsPage()
     false,
   );
   const alertOnDirty = getBooleanSetting(SETTING_KEYS.alertOnDirty, false);
+  const auditRetentionDays = getNumberSetting(
+    SETTING_KEYS.auditRetentionDays,
+    0,
+  );
 
   return (
     <div className="space-y-6">
@@ -80,12 +84,24 @@ export default function SettingsPage()
         <CardContent>
           <form action={updateHistoryRetention} className="flex flex-col gap-4">
             <label className="flex flex-col gap-1.5 text-sm">
-              <span className="font-medium">Retention (days)</span>
+              <span className="font-medium">
+                Scan / git / health history (days)
+              </span>
               <input
                 type="number"
                 name="historyRetentionDays"
                 min={0}
                 defaultValue={retentionDays}
+                className="w-32 rounded-md border bg-background px-3 py-2 text-sm"
+              />
+            </label>
+            <label className="flex flex-col gap-1.5 text-sm">
+              <span className="font-medium">Audit log (days)</span>
+              <input
+                type="number"
+                name="auditRetentionDays"
+                min={0}
+                defaultValue={auditRetentionDays}
                 className="w-32 rounded-md border bg-background px-3 py-2 text-sm"
               />
             </label>

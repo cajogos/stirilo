@@ -77,6 +77,36 @@ test("cron tick requires auth and returns a count", async ({ request }) =>
   expect(typeof body.started).toBe("number");
 });
 
+test("health trends endpoint returns structured data", async ({ request }) =>
+{
+  expect((await request.get("/api/health/trends")).status()).toBe(401);
+
+  const res = await request.get("/api/health/trends", { headers: auth });
+  expect(res.ok()).toBeTruthy();
+  const body = await res.json();
+  expect(Array.isArray(body.trends)).toBeTruthy();
+});
+
+test("audit log exports as JSON and CSV without leaking secrets", async ({
+  request,
+}) =>
+{
+  expect((await request.get("/api/audit-log/export")).status()).toBe(401);
+
+  const json = await request.get("/api/audit-log/export", { headers: auth });
+  expect(json.ok()).toBeTruthy();
+  expect(json.headers()["content-type"]).toContain("application/json");
+  const jsonText = await json.text();
+  expect(jsonText).toContain("auditLog");
+  expect(jsonText).not.toContain("e2e-agent-token-value");
+
+  const csv = await request.get("/api/audit-log/export?format=csv", {
+    headers: auth,
+  });
+  expect(csv.ok()).toBeTruthy();
+  expect(csv.headers()["content-type"]).toContain("text/csv");
+});
+
 test("sensitive inventory lists a fixture .env by metadata only", async ({
   request,
 }) =>

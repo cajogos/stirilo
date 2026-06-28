@@ -20,19 +20,20 @@ test("creates a schedule and the cron tick runs it", async ({ page, request }) =
   writeFileSync(join(dir, "a.txt"), "x");
   const name = `Sched ${Date.now()}`;
 
+  // Create the target via the API (deterministic) so the test focuses on the
+  // scheduling feature, not the create-target form.
+  const created = await request.post("/api/scan-targets", {
+    headers: auth,
+    data: { name, path: dir, confirm: true },
+  });
+  expect(created.status()).toBe(201);
+  const { id } = await created.json();
+
   await login(page);
 
-  // Add the scan target (in /tmp, so confirmation is required).
-  await page.goto("/scan-targets");
-  await page.getByLabel("Name", { exact: true }).fill(name);
-  await page.getByLabel("Path", { exact: true }).fill(dir);
-  await page.getByRole("checkbox").check();
-  await page.getByRole("button", { name: "Add scan target" }).click();
-  await expect(page).toHaveURL(/\/scan-targets$/, { timeout: 20_000 });
-
-  // Create an every-minute schedule for it.
+  // Create an every-minute schedule for the target, selected by its id.
   await page.goto("/schedules");
-  await page.getByLabel("Target").selectOption({ label: name });
+  await page.getByLabel("Target").selectOption(id);
   await page.getByLabel("Interval (minutes)").fill("1");
   await page.getByRole("button", { name: "Add schedule" }).click();
   await expect(page.locator("tr", { hasText: name })).toBeVisible({

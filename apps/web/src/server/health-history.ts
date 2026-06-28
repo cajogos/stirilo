@@ -4,6 +4,7 @@ import os from "node:os";
 import { statfs } from "node:fs/promises";
 import { desc, lt } from "drizzle-orm";
 import {
+  auditLog,
   gitStatusSnapshots,
   healthSnapshots,
   scanRuns,
@@ -59,23 +60,34 @@ export function listHealthSnapshots(limit = 200): HealthSnapshot[]
     .reverse();
 }
 
-// Delete history older than the configured retention window. A window of 0 (the
-// default) keeps everything. Returns the cutoff used, or null if disabled.
-export function pruneHistory(): string | null
+function cutoffIso(days: number): string
 {
-  const days = getNumberSetting(SETTING_KEYS.historyRetentionDays, 0);
-  if (!days || days <= 0)
-  {
-    return null;
-  }
-  const cutoff = new Date(
-    Date.now() - days * 24 * 60 * 60 * 1000,
-  ).toISOString();
+  return new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+}
+
+// Delete history older than the configured retention windows. A window of 0 (the
+// default) keeps everything. Scan/git/health share one window; the audit log has
+// its own, since audit retention is a deliberate, separate policy decision.
+export function pruneHistory(): void
+{
   const db = getDb();
-  db.delete(healthSnapshots).where(lt(healthSnapshots.createdAt, cutoff)).run();
-  db.delete(gitStatusSnapshots)
-    .where(lt(gitStatusSnapshots.createdAt, cutoff))
-    .run();
-  db.delete(scanRuns).where(lt(scanRuns.startedAt, cutoff)).run();
-  return cutoff;
+
+  const days = getNumberSetting(SETTING_KEYS.historyRetentionDays, 0);
+  if (days > 0)
+  {
+    const cutoff = cutoffIso(days);
+    db.delete(healthSnapshots)
+      .where(lt(healthSnapshots.createdAt, cutoff))
+      .run();
+    db.delete(gitStatusSnapshots)
+      .where(lt(gitStatusSnapshots.createdAt, cutoff))
+      .run();
+    db.delete(scanRuns).where(lt(scanRuns.startedAt, cutoff)).run();
+  }
+
+  const auditDays = getNumberSetting(SETTING_KEYS.auditRetentionDays, 0);
+  if (auditDays > 0)
+  {
+    db.delete(auditLog).where(lt(auditLog.createdAt, cutoffIso(auditDays))).run();
+  }
 }

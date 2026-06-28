@@ -18,17 +18,22 @@ export async function updateGitFetchOnScan(formData: FormData): Promise<void>
   revalidatePath("/settings");
 }
 
-// Persist the history retention window in days. 0 (or invalid) means keep all.
+// Persist the retention windows in days. 0 (or invalid) means keep all. Scan/
+// git/health history and the audit log have independent windows.
 export async function updateHistoryRetention(formData: FormData): Promise<void>
 {
   const session = await getCurrentSession();
+  const actor = session?.username ?? "(unknown)";
+
   const raw = Number(formData.get("historyRetentionDays"));
   const days = Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 0;
-  setSetting(
-    SETTING_KEYS.historyRetentionDays,
-    String(days),
-    session?.username ?? "(unknown)",
-  );
+  setSetting(SETTING_KEYS.historyRetentionDays, String(days), actor);
+
+  const rawAudit = Number(formData.get("auditRetentionDays"));
+  const auditDays =
+    Number.isFinite(rawAudit) && rawAudit > 0 ? Math.floor(rawAudit) : 0;
+  setSetting(SETTING_KEYS.auditRetentionDays, String(auditDays), actor);
+
   revalidatePath("/settings");
 }
 

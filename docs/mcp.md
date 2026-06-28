@@ -53,6 +53,13 @@ STIRILO_APP_URL=http://localhost:3157 STIRILO_AGENT_TOKEN=... node packages/mcp/
 - `stirilo_get_git_status`
 - `stirilo_find_large_files`
 - `stirilo_find_sensitive_file_markers`
+- `stirilo_sensitive_inventory`
+- `stirilo_disk_report`
+- `stirilo_find_duplicates`
+- `stirilo_project_inventory`
+- `stirilo_git_at_risk`
+- `stirilo_health_trends`
+- `stirilo_scan_diff`
 
 There is deliberately no command-execution tool. The MCP server cannot run
 commands, write files, or change settings.

@@ -21,6 +21,20 @@ export default function AuditLogPage()
         <p className="text-sm text-muted-foreground">
           Recent recorded actions. Secrets are never logged.
         </p>
+        <div className="mt-2 flex gap-3 text-sm">
+          <a
+            href="/api/audit-log/export"
+            className="font-medium underline-offset-4 hover:underline"
+          >
+            Export JSON
+          </a>
+          <a
+            href="/api/audit-log/export?format=csv"
+            className="font-medium underline-offset-4 hover:underline"
+          >
+            Export CSV
+          </a>
+        </div>
       </div>
 
       {entries.length === 0 ? (

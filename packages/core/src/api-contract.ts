@@ -191,6 +191,13 @@ export const API_ROUTES: ApiRouteDef[] = [
     successStatus: 200,
   },
   {
+    method: "get",
+    path: "/api/health/trends",
+    summary: "Persisted host metric snapshots (memory, load, disk, uptime).",
+    auth: true,
+    successStatus: 200,
+  },
+  {
     method: "post",
     path: "/api/cron/tick",
     summary: "Run any due scan schedules; returns { started }.",
@@ -201,6 +208,13 @@ export const API_ROUTES: ApiRouteDef[] = [
     method: "get",
     path: "/api/audit-log",
     summary: "Recent audit entries.",
+    auth: true,
+    successStatus: 200,
+  },
+  {
+    method: "get",
+    path: "/api/audit-log/export",
+    summary: "Download the audit log (JSON, or ?format=csv).",
     auth: true,
     successStatus: 200,
   },

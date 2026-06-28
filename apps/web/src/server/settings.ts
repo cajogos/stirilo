@@ -10,6 +10,7 @@ import { getDb } from "@/server/db";
 export const SETTING_KEYS = {
   gitFetchOnScan: "git.fetch_on_scan",
   historyRetentionDays: "history.retention_days",
+  auditRetentionDays: "audit.retention_days",
   alertWebhookUrl: "alert.webhook_url",
   alertDiskThresholdPercent: "alert.disk_threshold_percent",
   alertOnSensitive: "alert.on_new_sensitive",

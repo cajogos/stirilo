@@ -25,6 +25,9 @@ describe("createTools", () =>
     expect(names).toContain("stirilo_list_scan_targets");
     expect(names).toContain("stirilo_list_git_repositories");
     expect(names).toContain("stirilo_get_git_status");
+    expect(names).toContain("stirilo_git_at_risk");
+    expect(names).toContain("stirilo_sensitive_inventory");
+    expect(names).toContain("stirilo_health_trends");
     // No tool may execute commands.
     expect(names.some((n) => /exec|run.?command|shell/i.test(n))).toBe(false);
   });

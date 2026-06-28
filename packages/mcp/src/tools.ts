@@ -119,5 +119,54 @@ export function createTools(client: ApiClient): ToolDef[]
         return text(summary?.sensitiveMarkers ?? []);
       },
     },
+    {
+      name: "stirilo_sensitive_inventory",
+      description:
+        "Sensitive-file inventory (metadata only) grouped by target across the latest scans.",
+      schema: {},
+      handler: async () => text(await client.get("/api/insights/sensitive")),
+    },
+    {
+      name: "stirilo_disk_report",
+      description:
+        "Disk reclamation report: largest files/directories, artifact dirs, stale files.",
+      schema: {},
+      handler: async () => text(await client.get("/api/insights/disk")),
+    },
+    {
+      name: "stirilo_find_duplicates",
+      description:
+        "Potential duplicate files (grouped by size and name; metadata only).",
+      schema: {},
+      handler: async () => text(await client.get("/api/insights/duplicates")),
+    },
+    {
+      name: "stirilo_project_inventory",
+      description: "Detected project/framework markers across scanned targets.",
+      schema: {},
+      handler: async () => text(await client.get("/api/insights/projects")),
+    },
+    {
+      name: "stirilo_git_at_risk",
+      description:
+        "Repositories flagged dirty, unpushed, without a remote, or stale.",
+      schema: {},
+      handler: async () => text(await client.get("/api/git/at-risk")),
+    },
+    {
+      name: "stirilo_health_trends",
+      description:
+        "Persisted host metric snapshots (memory, load, disk, uptime) over time.",
+      schema: {},
+      handler: async () => text(await client.get("/api/health/trends")),
+    },
+    {
+      name: "stirilo_scan_diff",
+      description:
+        "Diff the two latest completed scans of a target by id (added/removed sensitive files, deltas).",
+      schema: idParamSchema.shape,
+      handler: async (args) =>
+        text(await client.get(`/api/scan-targets/${String(args.id)}/diff`)),
+    },
   ];
 }

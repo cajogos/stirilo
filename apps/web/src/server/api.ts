@@ -1,7 +1,7 @@
 import "server-only";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
-import { loadConfig } from "@stirilo/core";
+import { hitRateLimit, loadConfig, type RateWindow } from "@stirilo/core";
 
 // Stable error envelope shared by every API route.
 export function jsonError(
@@ -12,6 +12,32 @@ export function jsonError(
 ): NextResponse
 {
   return NextResponse.json({ error: { code, message, details } }, { status });
+}
+
+// In-memory fixed-window rate limiting, keyed by a hash of the presented token
+// so the raw token is never stored. The app is a single Node process, so an
+// in-memory store is sufficient. Configurable via STIRILO_RATE_LIMIT_PER_MIN.
+const RATE_WINDOW_MS = 60_000;
+const RATE_MAX = Number(process.env.STIRILO_RATE_LIMIT_PER_MIN ?? 300);
+const rateStore = new Map<string, RateWindow>();
+
+function enforceRateLimit(tokenKey: string): NextResponse | null
+{
+  const now = Date.now();
+  const { window, limited } = hitRateLimit(
+    rateStore.get(tokenKey),
+    now,
+    RATE_MAX,
+    RATE_WINDOW_MS,
+  );
+  rateStore.set(tokenKey, window);
+  if (limited)
+  {
+    return jsonError("RATE_LIMITED", "Too many requests; slow down.", 429, {
+      limitPerMinute: RATE_MAX,
+    });
+  }
+  return null;
 }
 
 // Authenticate a request with the agent token (Bearer), compared in constant
@@ -42,5 +68,7 @@ export function requireAgent(request: Request): NextResponse | null
     return jsonError("UNAUTHORIZED", "Invalid agent token.", 401);
   }
 
-  return null;
+  // Rate-limit authenticated callers, keyed by the token hash (never the raw
+  // token). Unauthenticated requests are rejected above and never counted.
+  return enforceRateLimit(provided.toString("hex"));
 }
