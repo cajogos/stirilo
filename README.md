@@ -2,9 +2,9 @@
 
 A self-hosted, local-first system control dashboard for developers.
 
-Stirilo runs on your own machine and helps you inspect and understand your local development environment: directory scan targets, filesystem metadata, Git repositories and their status, sensitive-file markers, and basic system health. It surfaces this through a web UI and an authenticated local HTTP API, with an MCP server planned so AI agents can query system state safely.
+Stirilo runs on your own machine and helps you inspect and understand your local development environment: directory scan targets, filesystem metadata, Git repositories and their status, sensitive-file markers, and basic system health. It surfaces this through a web UI, an authenticated local HTTP API, and a read-only MCP server so AI agents can query system state safely.
 
-> Status: early development (pre-v0.1). Things will change.
+> Status: v0.1. Local dashboard, SQLite persistence, directory scanning, Git status, HTTP API, and MCP server.
 
 ## Principles
 
@@ -25,8 +25,6 @@ Stirilo runs on your own machine and helps you inspect and understand your local
 pnpm workspace, Node.js 22+, TypeScript, Next.js, Tailwind CSS, shadcn/ui, SQLite (Drizzle ORM), Zod. Tested with Vitest and Playwright.
 
 ## Getting started
-
-> Not all of this is wired up yet; see the project status above.
 
 ```bash
 pnpm install
@@ -69,8 +67,19 @@ pnpm lint         # lint
 pnpm typecheck    # type check
 pnpm test         # unit/integration tests (Vitest)
 pnpm test:e2e     # end-to-end tests (Playwright)
-pnpm gitleaks     # scan for committed secrets
+pnpm db:generate  # generate a Drizzle migration
+pnpm db:migrate   # apply migrations
 ```
+
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [Security model](docs/security-model.md)
+- [Filesystem scanner](docs/scanner.md)
+- [HTTP API](docs/api.md)
+- [MCP server](docs/mcp.md)
+- [Command runner (design only)](docs/command-runner.md)
+- [Changelog](CHANGELOG.md)
 
 ## License
 

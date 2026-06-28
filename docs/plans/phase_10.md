@@ -1,6 +1,6 @@
 # Phase 10: v0.1 Release
 
-**Status:** Not started
+**Status:** Done
 **Depends on:** Phase 9
 **PRD reference:** Milestone 10, Implementation Order steps 14-15
 
@@ -24,19 +24,19 @@ Harden, document, and tag v0.1: a project that a developer can clone, configure,
 
 ## Deliverables
 
-- [ ] Release notes
-- [ ] Tagged version
-- [ ] README complete (what Stirilo is, who it is for, quick start, security model, what it will not do, dev commands, DB location, env vars, testing, license)
-- [ ] Security docs complete
-- [ ] Required docs present: `architecture.md`, `security-model.md`, `scanner.md`, `api.md`, `mcp.md`
-- [ ] CI green, tests green
-- [ ] Screenshots (optional)
+- [x] Release notes
+- [x] Tagged version
+- [x] README complete (what Stirilo is, who it is for, quick start, security model, what it will not do, dev commands, DB location, env vars, testing, license)
+- [x] Security docs complete
+- [x] Required docs present: `architecture.md`, `security-model.md`, `scanner.md`, `api.md`, `mcp.md`
+- [x] CI green, tests green
+- [x] Screenshots (optional)
 
 ## Acceptance criteria
 
-- [ ] Fresh clone can install, configure, run, test, and build
-- [ ] Project is safe to publish publicly
-- [ ] v0.1 provides: local dashboard, SQLite persistence, directory scanning, Git status, HTTP API, and optional MCP
+- [x] Fresh clone can install, configure, run, test, and build
+- [x] Project is safe to publish publicly
+- [x] v0.1 provides: local dashboard, SQLite persistence, directory scanning, Git status, HTTP API, and optional MCP
 
 ## Recommendations / Watch-outs
 
@@ -45,11 +45,11 @@ Harden, document, and tag v0.1: a project that a developer can clone, configure,
 
 ## Release verification (run before tagging)
 
-- [ ] `pnpm lint`
-- [ ] `pnpm typecheck`
-- [ ] `pnpm test`
-- [ ] `pnpm build`
-- [ ] `gitleaks git` over full history (no secrets in working tree **or history**)
+- [x] `pnpm lint`
+- [x] `pnpm typecheck`
+- [x] `pnpm test`
+- [x] `pnpm build`
+- [x] `gitleaks git` over full history (no secrets in working tree **or history**)
 
 ## Safety notes
 
@@ -59,19 +59,19 @@ Harden, document, and tag v0.1: a project that a developer can clone, configure,
 
 ## Implementation Checklist
 
-1. [ ] Complete all `README.md` sections
-2. [ ] Complete `SECURITY.md` and the docs set (`architecture.md`, `security-model.md`, `scanner.md`, `api.md`, `mcp.md`)
-3. [ ] Write release notes
-4. [ ] Run the full verification chain and fix any failures
-5. [ ] Run `gitleaks git` over the full history
-6. [ ] Tag `v0.1.0`
+1. [x] Complete all `README.md` sections
+2. [x] Complete `SECURITY.md` and the docs set (`architecture.md`, `security-model.md`, `scanner.md`, `api.md`, `mcp.md`)
+3. [x] Write release notes
+4. [x] Run the full verification chain and fix any failures
+5. [x] Run `gitleaks git` over the full history
+6. [x] Tag `v0.1.0`
 
 ## Done
 
 Mark this phase complete only when all of the following hold:
 
-- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
-- [ ] **Verify:** `pnpm lint && pnpm typecheck && pnpm test && pnpm build && gitleaks git` all pass; a fresh clone can install/configure/run/test/build
-- [ ] `gitleaks git` over full history is clean (no secrets anywhere in history)
-- [ ] This file's **Status** changed to `Done`
-- [ ] Tagged `v0.1.0` locally; **do not push** until Carlos approves the public release
+- [x] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [x] **Verify:** `pnpm lint && pnpm typecheck && pnpm test && pnpm build && gitleaks git` all pass; a fresh clone can install/configure/run/test/build
+- [x] `gitleaks git` over full history is clean (no secrets anywhere in history)
+- [x] This file's **Status** changed to `Done`
+- [x] Tagged `v0.1.0` locally; **do not push** until Carlos approves the public release
