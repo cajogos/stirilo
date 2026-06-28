@@ -38,6 +38,7 @@ export interface GitStatus
 export interface GitRepository
 {
   path: string;
+  sizeBytes: number;
   status: GitStatus;
 }
 
@@ -58,6 +59,54 @@ async function git(cwd: string, args: string[]): Promise<string | null>
   {
     return null;
   }
+}
+
+// Sum the size of a repository's working-tree files (metadata only, never reads
+// contents). Skips the .git directory and ignored directories; symlinks are not
+// followed.
+async function directorySize(root: string): Promise<number>
+{
+  let total = 0;
+
+  async function walk(dir: string): Promise<void>
+  {
+    let entries;
+    try
+    {
+      entries = await readdir(dir, { withFileTypes: true });
+    }
+    catch
+    {
+      return;
+    }
+
+    for (const entry of entries)
+    {
+      if (entry.isDirectory())
+      {
+        if (entry.name === ".git" || IGNORED_DIRECTORIES.has(entry.name))
+        {
+          continue;
+        }
+        await walk(join(dir, entry.name));
+      }
+      else if (entry.isFile())
+      {
+        try
+        {
+          const stats = await stat(join(dir, entry.name));
+          total += stats.size;
+        }
+        catch
+        {
+          // Unreadable file: skip.
+        }
+      }
+    }
+  }
+
+  await walk(root);
+  return total;
 }
 
 async function isRepository(dir: string): Promise<boolean>
@@ -187,7 +236,11 @@ export async function findRepositories(root: string): Promise<GitRepository[]>
   {
     if (await isRepository(dir))
     {
-      repos.push({ path: dir, status: await getGitStatus(dir) });
+      repos.push({
+        path: dir,
+        sizeBytes: await directorySize(dir),
+        status: await getGitStatus(dir),
+      });
       // Keep descending to find nested repositories.
     }
 

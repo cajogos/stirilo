@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { EmptyState } from "@/components/ui/states";
+import { formatBytes } from "@/lib/format";
 
 export default function GitPage()
 {
@@ -41,6 +42,7 @@ export default function GitPage()
                   <TableHead>Repository</TableHead>
                   <TableHead>Branch</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Size</TableHead>
                   <TableHead>Remote</TableHead>
                 </TableRow>
               </TableHeader>
@@ -62,6 +64,9 @@ export default function GitPage()
                       ) : (
                         <span className="text-emerald-500">Clean</span>
                       )}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {status ? formatBytes(status.sizeBytes) : "-"}
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {repo.remoteHost ?? "-"}

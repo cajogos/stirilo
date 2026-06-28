@@ -77,6 +77,7 @@ async function detectGitRepositories(
         lastCommitHash: repo.status.lastCommitHash,
         lastCommitSubject: repo.status.lastCommitSubject,
         lastCommitDate: repo.status.lastCommitDate,
+        sizeBytes: repo.sizeBytes,
         createdAt: now,
       })
       .run();

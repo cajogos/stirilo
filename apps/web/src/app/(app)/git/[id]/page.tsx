@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { formatBytes } from "@/lib/format";
 
 interface GitRepoDetailProps
 {
@@ -73,6 +74,7 @@ export default async function GitRepoDetailPage({ params }: GitRepoDetailProps)
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-3">
             <Field label="State" value={status.isDirty ? "Dirty" : "Clean"} />
+            <Field label="Size" value={formatBytes(status.sizeBytes)} />
             <Field label="Staged" value={String(status.stagedCount)} />
             <Field label="Unstaged" value={String(status.unstagedCount)} />
             <Field label="Untracked" value={String(status.untrackedCount)} />

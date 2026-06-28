@@ -103,6 +103,7 @@ export const gitStatusSnapshots = sqliteTable("git_status_snapshots", {
   lastCommitHash: text("last_commit_hash"),
   lastCommitSubject: text("last_commit_subject"),
   lastCommitDate: text("last_commit_date"),
+  sizeBytes: integer("size_bytes").notNull().default(0),
   createdAt: text("created_at").notNull(),
 });
 

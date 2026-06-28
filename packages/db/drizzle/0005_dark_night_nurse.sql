@@ -1,0 +1,1 @@
+ALTER TABLE `git_status_snapshots` ADD `size_bytes` integer DEFAULT 0 NOT NULL;
