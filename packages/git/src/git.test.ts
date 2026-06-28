@@ -86,4 +86,25 @@ describe("findRepositories", () =>
     expect(repos).toHaveLength(1);
     expect(repos[0]?.path).toBe(repo);
   });
+
+  it("finds repositories nested inside another repository", async () =>
+  {
+    const root = tempDir();
+    const outer = join(root, "outer");
+    mkdirSync(outer);
+    gitInit(outer);
+    writeFileSync(join(outer, "a.txt"), "x");
+    gitCommit(outer, "outer");
+
+    const inner = join(outer, "packages", "inner");
+    mkdirSync(inner, { recursive: true });
+    gitInit(inner);
+    writeFileSync(join(inner, "b.txt"), "y");
+    gitCommit(inner, "inner");
+
+    const repos = await findRepositories(root);
+    const paths = repos.map((r) => r.path).sort();
+    expect(paths).toContain(outer);
+    expect(paths).toContain(inner);
+  });
 });
