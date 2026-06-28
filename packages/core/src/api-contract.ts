@@ -191,6 +191,13 @@ export const API_ROUTES: ApiRouteDef[] = [
     successStatus: 200,
   },
   {
+    method: "post",
+    path: "/api/cron/tick",
+    summary: "Run any due scan schedules; returns { started }.",
+    auth: true,
+    successStatus: 200,
+  },
+  {
     method: "get",
     path: "/api/audit-log",
     summary: "Recent audit entries.",

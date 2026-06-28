@@ -31,3 +31,34 @@ export async function updateHistoryRetention(formData: FormData): Promise<void>
   );
   revalidatePath("/settings");
 }
+
+// Persist alerting configuration: webhook URL, disk threshold (0 disables), and
+// the new-sensitive / dirty-repo toggles. The webhook URL is non-secret config.
+export async function updateAlertSettings(formData: FormData): Promise<void>
+{
+  const session = await getCurrentSession();
+  const actor = session?.username ?? "(unknown)";
+
+  const webhookUrl = String(formData.get("alertWebhookUrl") ?? "").trim();
+  setSetting(SETTING_KEYS.alertWebhookUrl, webhookUrl, actor);
+
+  const rawDisk = Number(formData.get("alertDiskThresholdPercent"));
+  const disk =
+    Number.isFinite(rawDisk) && rawDisk > 0 && rawDisk <= 100
+      ? Math.floor(rawDisk)
+      : 0;
+  setSetting(SETTING_KEYS.alertDiskThresholdPercent, String(disk), actor);
+
+  setSetting(
+    SETTING_KEYS.alertOnSensitive,
+    formData.get("alertOnSensitive") === "on" ? "true" : "false",
+    actor,
+  );
+  setSetting(
+    SETTING_KEYS.alertOnDirty,
+    formData.get("alertOnDirty") === "on" ? "true" : "false",
+    actor,
+  );
+
+  revalidatePath("/settings");
+}

@@ -46,6 +46,7 @@ All errors use a stable envelope:
 | GET | `/api/insights/disk` | Disk reclamation report: largest files/dirs, artifacts, stale. |
 | GET | `/api/insights/duplicates` | Potential duplicate files (grouped by size and name). |
 | GET | `/api/insights/projects` | Project/framework inventory across scanned targets. |
+| POST | `/api/cron/tick` | Run any due scan schedules; returns { started }. |
 | GET | `/api/audit-log` | Recent audit entries. |
 
 ## Request bodies

@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  CalendarClock,
   FolderSearch,
   GitBranch,
   LayoutDashboard,
@@ -29,6 +30,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/sensitive", label: "Sensitive files", icon: ShieldAlert },
   { href: "/insights", label: "Insights", icon: Lightbulb },
   { href: "/health", label: "Health", icon: HeartPulse },
+  { href: "/schedules", label: "Schedules", icon: CalendarClock },
   { href: "/audit-log", label: "Audit log", icon: ScrollText },
   { href: "/settings", label: "Settings", icon: Settings },
 ];

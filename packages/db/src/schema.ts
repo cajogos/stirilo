@@ -127,3 +127,17 @@ export const healthSnapshots = sqliteTable("health_snapshots", {
 
 export type HealthSnapshot = typeof healthSnapshots.$inferSelect;
 export type NewHealthSnapshot = typeof healthSnapshots.$inferInsert;
+
+// Interval-based scan schedules. A null scanTargetId means "all enabled
+// targets". Evaluated by the cron tick; cron expressions are a future addition.
+export const schedules = sqliteTable("schedules", {
+  id: text("id").primaryKey(),
+  scanTargetId: text("scan_target_id"),
+  intervalMinutes: integer("interval_minutes").notNull(),
+  enabled: integer("enabled", { mode: "boolean" }).notNull().default(true),
+  lastRunAt: text("last_run_at"),
+  createdAt: text("created_at").notNull(),
+});
+
+export type Schedule = typeof schedules.$inferSelect;
+export type NewSchedule = typeof schedules.$inferInsert;

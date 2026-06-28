@@ -9,9 +9,11 @@ import { Button } from "@/components/ui/button";
 import {
   getBooleanSetting,
   getNumberSetting,
+  getSetting,
   SETTING_KEYS,
 } from "@/server/settings";
 import {
+  updateAlertSettings,
   updateGitFetchOnScan,
   updateHistoryRetention,
 } from "@/server/settings-actions";
@@ -20,6 +22,16 @@ export default function SettingsPage()
 {
   const fetchOnScan = getBooleanSetting(SETTING_KEYS.gitFetchOnScan, false);
   const retentionDays = getNumberSetting(SETTING_KEYS.historyRetentionDays, 0);
+  const webhookUrl = getSetting(SETTING_KEYS.alertWebhookUrl) ?? "";
+  const diskThreshold = getNumberSetting(
+    SETTING_KEYS.alertDiskThresholdPercent,
+    0,
+  );
+  const alertOnSensitive = getBooleanSetting(
+    SETTING_KEYS.alertOnSensitive,
+    false,
+  );
+  const alertOnDirty = getBooleanSetting(SETTING_KEYS.alertOnDirty, false);
 
   return (
     <div className="space-y-6">
@@ -76,6 +88,65 @@ export default function SettingsPage()
                 defaultValue={retentionDays}
                 className="w-32 rounded-md border bg-background px-3 py-2 text-sm"
               />
+            </label>
+            <div>
+              <Button type="submit">Save</Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Alerts</CardTitle>
+          <CardDescription>
+            Evaluated after each scan. Notifications are sent to the webhook
+            (if set) with secret patterns redacted; they carry counts and
+            messages only, never file contents.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form action={updateAlertSettings} className="flex flex-col gap-4">
+            <label className="flex flex-col gap-1.5 text-sm">
+              <span className="font-medium">Webhook URL</span>
+              <input
+                type="url"
+                name="alertWebhookUrl"
+                defaultValue={webhookUrl}
+                placeholder="https://example.com/hook"
+                className="w-full max-w-md rounded-md border bg-background px-3 py-2 text-sm"
+              />
+            </label>
+            <label className="flex flex-col gap-1.5 text-sm">
+              <span className="font-medium">
+                Disk usage alert threshold (%, 0 disables)
+              </span>
+              <input
+                type="number"
+                name="alertDiskThresholdPercent"
+                min={0}
+                max={100}
+                defaultValue={diskThreshold}
+                className="w-32 rounded-md border bg-background px-3 py-2 text-sm"
+              />
+            </label>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                name="alertOnSensitive"
+                defaultChecked={alertOnSensitive}
+                className="h-4 w-4"
+              />
+              Alert when new sensitive files appear
+            </label>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                name="alertOnDirty"
+                defaultChecked={alertOnDirty}
+                className="h-4 w-4"
+              />
+              Alert when repositories have uncommitted changes
             </label>
             <div>
               <Button type="submit">Save</Button>

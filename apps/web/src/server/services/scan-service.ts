@@ -14,6 +14,7 @@ import { findRepositories } from "@stirilo/git";
 import { getDb } from "@/server/db";
 import { getBooleanSetting, SETTING_KEYS } from "@/server/settings";
 import { recordHealthSnapshot } from "@/server/health-history";
+import { evaluateAndDispatchAlerts } from "@/server/alerts";
 
 export type ExecuteScanResult =
   | { ok: true; runId: string; status: "completed" | "failed" }
@@ -187,6 +188,18 @@ export async function executeScan(
     catch
     {
       // History recording is best-effort; the scan already succeeded.
+    }
+
+    // Evaluate and dispatch alert rules (best-effort). Runs after the git
+    // snapshot + health snapshot above so disk/sensitive/dirty conditions are
+    // current. Payloads are redacted inside the alert layer.
+    try
+    {
+      await evaluateAndDispatchAlerts(targetId);
+    }
+    catch
+    {
+      // Alerting is best-effort; never fail a scan because of it.
     }
 
     recordAudit(db, {

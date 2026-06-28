@@ -67,6 +67,16 @@ test("insights endpoints require the agent token", async ({ request }) =>
   expect(res.status()).toBe(401);
 });
 
+test("cron tick requires auth and returns a count", async ({ request }) =>
+{
+  expect((await request.post("/api/cron/tick")).status()).toBe(401);
+
+  const res = await request.post("/api/cron/tick", { headers: auth });
+  expect(res.ok()).toBeTruthy();
+  const body = await res.json();
+  expect(typeof body.started).toBe("number");
+});
+
 test("sensitive inventory lists a fixture .env by metadata only", async ({
   request,
 }) =>
