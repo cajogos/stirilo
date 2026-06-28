@@ -1,30 +1,23 @@
 # Not Done
 
-All v0.1 build phases (0-10) are complete and were verified locally (lint,
-typecheck, unit tests, e2e, build, gitleaks). The phase files have been removed.
-The outstanding pieces carried over from those phases have been promoted into
-the post-v0.1 roadmap (see [README.md](README.md)); they are tracked below by
-their owning phase.
+All build phases (0-16) are complete and verified. The v0.1 phases (0-10) were
+verified locally; the post-v0.1 phases (11-16, see [README.md](README.md)) were
+verified locally and on CI. There are no outstanding phase commitments.
 
-## Phase 11 (Close v0.1 Open Loops) - done except CI
+## Closed
 
-- **zod-to-openapi auto-generation:** DONE. `docs/api.md` + `docs/openapi.json`
-  are generated from `@stirilo/core`'s contract via `pnpm docs:api`; the web
-  route validation and MCP `id` param derive from the same source.
-- **Dedicated build dir for CI/e2e:** DONE. `STIRILO_DIST_DIR` drives the Next
-  `distDir`; e2e builds/starts into `.next-verify`.
-- **CI verification (from Phase 0 / Phase 10):** STILL OPEN. The chain passes
-  locally but **CI has never actually run** because nothing has been pushed yet
-  (push is deliberately deferred). To close: push and confirm CI goes green.
+- **CI verification (Phase 11):** CLOSED. `main` was pushed and the GitHub
+  Actions workflow ran green (lint + typecheck + test + build + gitleaks).
+- **zod-to-openapi auto-generation (Phase 11):** DONE.
+- **Dedicated build dir for CI/e2e (Phase 11):** DONE (`STIRILO_DIST_DIR`).
+- **Git remote freshness (Phase 13):** DONE as an off-by-default fetch toggle.
 
-## Promoted to Phase 13 (Git Intelligence)
-
-- **Git remote freshness:** the git scanner is read-only and never fetches, so
-  ahead/behind reflect local refs only. A "remote last commit" / true
-  ahead-behind column would require `git fetch` during scans (a behavior change),
-  now scoped as an off-by-default toggle in Phase 13.
-
-## Notes / ideas raised during the build (no phase yet)
+## Notes / ideas (optional, no phase)
 
 - **Relative commit times** ("x ago") in the git table were left as absolute
   dates to avoid client/server hydration mismatches.
+- **GitHub Actions Node 20 deprecation:** the CI run warns that pinned actions
+  (`actions/checkout@v4`, `actions/setup-node@v4`, `pnpm/action-setup@v4`,
+  `gitleaks/gitleaks-action@v2`) target Node 20, which GitHub is retiring on the
+  runners (forced to Node 24 for now). Non-blocking; bump the action versions
+  when convenient.

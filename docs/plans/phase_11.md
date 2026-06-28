@@ -1,6 +1,6 @@
 # Phase 11: Close v0.1 Open Loops
 
-**Status:** Done (except CI verification, deferred until first push)
+**Status:** Done
 **Depends on:** Phase 10
 **PRD reference:** Carried over from Phase 0 / Phase 7 / Phase 10 (see `not_done.md`)
 
@@ -21,14 +21,14 @@ Close the small, already-scoped gaps left at the end of the v0.1 build so the fo
 
 ## Deliverables
 
-- [ ] CI workflow run green on GitHub (first real run). **Blocked: requires a push, which is deliberately deferred.**
+- [x] CI workflow run green on GitHub (first real run): pushed `main`; the workflow succeeded (lint + typecheck + test + build + gitleaks, no leaks).
 - [x] `zod-to-openapi` wired in; `docs/api.md` (+ `docs/openapi.json`) and MCP `id` param schema derived from the shared `@stirilo/core` contract.
 - [x] Generation step runnable via `pnpm docs:api`.
 - [x] Separate `distDir` (`STIRILO_DIST_DIR`) for verification builds; e2e uses `.next-verify`.
 
 ## Acceptance criteria
 
-- [ ] CI passes on a push without local-only assumptions.
+- [x] CI passes on a push without local-only assumptions.
 - [ ] Editing a shared Zod schema regenerates both the API doc and the MCP tool schema; no manual edits to generated files.
 - [ ] Running `pnpm build` / `pnpm test:e2e` does not disturb a running `pnpm dev`.
 
@@ -49,15 +49,15 @@ Close the small, already-scoped gaps left at the end of the v0.1 build so the fo
 2. [x] Generate `docs/api.md` + `docs/openapi.json` via `scripts/generate-api-docs.mjs` (`pnpm docs:api`).
 3. [x] Derive MCP `id` param schema and the web `POST /api/scan-targets` validation from the same contract.
 4. [x] Introduce `STIRILO_DIST_DIR` in `next.config.mjs`; e2e (`playwright.config.ts`) builds/starts into `.next-verify`.
-5. [ ] Push to GitHub; confirm CI is green; fix any environment-only failures. **Deferred (no push yet).**
+5. [x] Push to GitHub; confirm CI is green (workflow run #1 succeeded in ~1m).
 6. [x] Update `not_done.md` to reflect the closed items.
 
 ## Done
 
 Mark this phase complete only when all of the following hold:
 
-- [x] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked (except CI, which requires a push)
+- [x] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
 - [x] **Verify:** regenerating docs is idempotent (`pnpm docs:api` then clean `git status docs/`); `pnpm test:e2e` builds into `.next-verify` and passes (12/12); lint + typecheck + 51 unit tests pass
 - [x] `git status` + `git diff --staged` reviewed; no secrets staged (tracked/staged gitleaks clean; only the local gitignored `.env` is flagged by a full `dir` scan)
-- [x] This file's **Status** changed to `Done` (CI deferred)
+- [x] This file's **Status** changed to `Done`
 - [ ] Committed locally: `build: Close v0.1 open loops (zod-to-openapi, distDir)`
