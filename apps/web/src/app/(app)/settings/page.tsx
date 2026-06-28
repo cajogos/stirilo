@@ -6,12 +6,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { getBooleanSetting, SETTING_KEYS } from "@/server/settings";
-import { updateGitFetchOnScan } from "@/server/settings-actions";
+import {
+  getBooleanSetting,
+  getNumberSetting,
+  SETTING_KEYS,
+} from "@/server/settings";
+import {
+  updateGitFetchOnScan,
+  updateHistoryRetention,
+} from "@/server/settings-actions";
 
 export default function SettingsPage()
 {
   const fetchOnScan = getBooleanSetting(SETTING_KEYS.gitFetchOnScan, false);
+  const retentionDays = getNumberSetting(SETTING_KEYS.historyRetentionDays, 0);
 
   return (
     <div className="space-y-6">
@@ -41,6 +49,33 @@ export default function SettingsPage()
                 className="h-4 w-4"
               />
               Fetch from remotes during scan
+            </label>
+            <div>
+              <Button type="submit">Save</Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>History retention</CardTitle>
+          <CardDescription>
+            How long to keep scan runs, git snapshots, and health snapshots.
+            Set to 0 to keep everything. Pruning runs after each scan.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form action={updateHistoryRetention} className="flex flex-col gap-4">
+            <label className="flex flex-col gap-1.5 text-sm">
+              <span className="font-medium">Retention (days)</span>
+              <input
+                type="number"
+                name="historyRetentionDays"
+                min={0}
+                defaultValue={retentionDays}
+                className="w-32 rounded-md border bg-background px-3 py-2 text-sm"
+              />
             </label>
             <div>
               <Button type="submit">Save</Button>

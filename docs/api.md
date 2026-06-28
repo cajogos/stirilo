@@ -35,6 +35,7 @@ All errors use a stable envelope:
 | POST | `/api/scan-targets` | Create a scan target. |
 | GET | `/api/scan-targets/{id}` | Get a scan target. |
 | POST | `/api/scan-targets/{id}/scan` | Run a scan; returns { runId, status }. |
+| GET | `/api/scan-targets/{id}/diff` | Diff the two latest completed scans of a target. |
 | GET | `/api/scans` | List scan runs. |
 | GET | `/api/scans/{id}` | Get a scan run (with summary). |
 | GET | `/api/git/repos` | List detected Git repositories with latest status. |

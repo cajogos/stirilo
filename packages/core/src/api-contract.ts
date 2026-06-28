@@ -111,6 +111,14 @@ export const API_ROUTES: ApiRouteDef[] = [
   },
   {
     method: "get",
+    path: "/api/scan-targets/{id}/diff",
+    summary: "Diff the two latest completed scans of a target.",
+    auth: true,
+    params: idParamSchema,
+    successStatus: 200,
+  },
+  {
+    method: "get",
     path: "/api/scans",
     summary: "List scan runs.",
     auth: true,

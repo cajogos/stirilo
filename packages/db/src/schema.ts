@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 // Key/value application settings. The database is dedicated to Stirilo, so no
 // table prefix is used.
@@ -111,3 +111,19 @@ export const gitStatusSnapshots = sqliteTable("git_status_snapshots", {
 
 export type GitStatusSnapshot = typeof gitStatusSnapshots.$inferSelect;
 export type NewGitStatusSnapshot = typeof gitStatusSnapshots.$inferInsert;
+
+// Point-in-time host metrics, persisted so trends can be charted over time.
+// Non-privileged, non-secret data only.
+export const healthSnapshots = sqliteTable("health_snapshots", {
+  id: text("id").primaryKey(),
+  createdAt: text("created_at").notNull(),
+  totalMemory: integer("total_memory").notNull().default(0),
+  freeMemory: integer("free_memory").notNull().default(0),
+  loadAvg1: real("load_avg_1").notNull().default(0),
+  diskTotal: integer("disk_total").notNull().default(0),
+  diskFree: integer("disk_free").notNull().default(0),
+  uptimeSeconds: integer("uptime_seconds").notNull().default(0),
+});
+
+export type HealthSnapshot = typeof healthSnapshots.$inferSelect;
+export type NewHealthSnapshot = typeof healthSnapshots.$inferInsert;

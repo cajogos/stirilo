@@ -13,6 +13,7 @@ import { scanDirectory } from "@stirilo/scanner";
 import { findRepositories } from "@stirilo/git";
 import { getDb } from "@/server/db";
 import { getBooleanSetting, SETTING_KEYS } from "@/server/settings";
+import { recordHealthSnapshot } from "@/server/health-history";
 
 export type ExecuteScanResult =
   | { ok: true; runId: string; status: "completed" | "failed" }
@@ -174,6 +175,18 @@ export async function executeScan(
     catch
     {
       // Git detection is best-effort; the filesystem scan already succeeded.
+    }
+
+    // Capture a host metrics snapshot on this natural cadence (best-effort) so
+    // health trends accumulate without a separate scheduler. Also prunes
+    // history per the configured retention window.
+    try
+    {
+      await recordHealthSnapshot();
+    }
+    catch
+    {
+      // History recording is best-effort; the scan already succeeded.
     }
 
     recordAudit(db, {

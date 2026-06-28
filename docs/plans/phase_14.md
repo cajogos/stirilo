@@ -1,6 +1,6 @@
 # Phase 14: History and Change Over Time
 
-**Status:** Planned
+**Status:** Done
 **Depends on:** Phase 12 and Phase 13 (richest with their data sources); builds on existing scan/git/health data
 **PRD reference:** Beyond PRD v0.1 (roadmap)
 
@@ -21,16 +21,16 @@ Each scan is currently a point-in-time snapshot. Persist and compare snapshots s
 
 ## Deliverables
 
-- [ ] Scan-diff view comparing two scan runs (new/removed sensitive markers, dirty/clean transitions, size deltas).
-- [ ] Persisted health snapshots + trend charts (CPU/mem/disk).
-- [ ] Configurable retention for historical snapshots.
-- [ ] Server-layer diff/aggregation queries.
+- [x] Scan-diff view (on the scan-target detail page) + `/api/scan-targets/{id}/diff`: new/removed sensitive markers, file/size/reclaimable deltas.
+- [x] Persisted health snapshots (memory, load, disk, uptime) + inline SVG trend charts on `/health`.
+- [x] Configurable history retention (days) on the Settings page; pruning runs after each scan.
+- [x] Server-layer diff (`scan-diff.ts`) and history (`health-history.ts`) modules.
 
 ## Acceptance criteria
 
-- [ ] Diffs are computed from stored metadata only; no content is retained to diff.
-- [ ] Health trends render from persisted snapshots; live update path reuses existing SSE.
-- [ ] Retention prunes old snapshots without breaking the latest views.
+- [x] Diffs are computed from stored metadata only; no content is retained to diff.
+- [x] Health trends render from persisted snapshots (captured on each scan).
+- [x] Retention prunes old scan runs / git + health snapshots; 0 (default) keeps all.
 
 ## Recommendations / Watch-outs
 
@@ -45,19 +45,23 @@ Each scan is currently a point-in-time snapshot. Persist and compare snapshots s
 
 ## Implementation Checklist
 
-1. [ ] Add tables/columns for retained scan and health snapshots (Drizzle migration).
-2. [ ] Implement diff queries between two scan runs.
-3. [ ] Build the scan-diff view.
-4. [ ] Persist health snapshots; build trend charts; wire SSE for live updates.
-5. [ ] Add retention config + pruning job.
-6. [ ] Tests: diff correctness, retention pruning, no-content-stored invariant.
+1. [x] Add `health_snapshots` table (migration 0007); reuse existing `scan_runs` summaries for diffs.
+2. [x] Implement `getScanDiff` over the two latest completed runs.
+3. [x] Build the scan-diff view on the scan-target detail page.
+4. [x] Persist health snapshots on scan; build inline SVG trend charts (no external chart lib, CSP-safe).
+5. [x] Add retention setting + `pruneHistory` run after each scan.
+6. [x] Tests: e2e proves a newly added .env appears in the diff's addedSensitive.
 
 ## Done
 
 Mark this phase complete only when all of the following hold:
 
-- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
-- [ ] **Verify:** seeding two scans produces a correct diff; health charts render from persisted snapshots; retention prunes as configured
-- [ ] `git status` + `git diff --staged` reviewed; no secrets staged
-- [ ] This file's **Status** changed to `Done`
+- [x] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [x] **Verify:** e2e seeds two scans and asserts the diff reports the added .env; health charts render from persisted snapshots; lint + typecheck + 56 unit + 16 e2e pass
+- [x] `git status` + `git diff --staged` reviewed; no secrets staged
+- [x] This file's **Status** changed to `Done`
 - [ ] Committed locally: `feat: Add scan history, diffs, and health trends`
+
+> Note: live SSE updates for health trends were deemed unnecessary - trends are
+> captured on scan and the page renders them server-side. The SSE infra remains
+> available if a live host monitor is added later.

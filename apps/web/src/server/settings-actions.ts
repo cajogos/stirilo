@@ -17,3 +17,17 @@ export async function updateGitFetchOnScan(formData: FormData): Promise<void>
   );
   revalidatePath("/settings");
 }
+
+// Persist the history retention window in days. 0 (or invalid) means keep all.
+export async function updateHistoryRetention(formData: FormData): Promise<void>
+{
+  const session = await getCurrentSession();
+  const raw = Number(formData.get("historyRetentionDays"));
+  const days = Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 0;
+  setSetting(
+    SETTING_KEYS.historyRetentionDays,
+    String(days),
+    session?.username ?? "(unknown)",
+  );
+  revalidatePath("/settings");
+}

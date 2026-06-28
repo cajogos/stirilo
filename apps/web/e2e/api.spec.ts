@@ -105,6 +105,35 @@ test("sensitive inventory lists a fixture .env by metadata only", async ({
   expect(text).not.toContain("e2e-agent-token-value");
 });
 
+test("scan diff reports a newly added sensitive file", async ({ request }) =>
+{
+  const dir = mkdtempSync(join(tmpdir(), "stirilo-diff-"));
+  writeFileSync(join(dir, "a.txt"), "x");
+
+  const created = await request.post("/api/scan-targets", {
+    headers: auth,
+    data: { name: `Diff ${Date.now()}`, path: dir, confirm: true },
+  });
+  expect(created.status()).toBe(201);
+  const { id } = await created.json();
+
+  // First scan: no sensitive files.
+  await request.post(`/api/scan-targets/${id}/scan`, { headers: auth });
+  // Introduce a sensitive file, then scan again.
+  writeFileSync(join(dir, ".env"), "placeholder-fixture-line\n");
+  await request.post(`/api/scan-targets/${id}/scan`, { headers: auth });
+
+  const res = await request.get(`/api/scan-targets/${id}/diff`, {
+    headers: auth,
+  });
+  expect(res.ok()).toBeTruthy();
+  const { diff } = await res.json();
+  expect(diff.hasPrevious).toBe(true);
+  expect(
+    diff.addedSensitive.some((m: { path: string }) => m.path === ".env"),
+  ).toBeTruthy();
+});
+
 test("at-risk report flags a repo with no remote", async ({ request }) =>
 {
   const dir = mkdtempSync(join(tmpdir(), "stirilo-atrisk-"));
