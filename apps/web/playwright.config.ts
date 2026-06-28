@@ -24,5 +24,14 @@ export default defineConfig({
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
+    // Test-only single-user credentials. The hash is argon2id("password") and is
+    // a throwaway fixture, not a real secret. The DB lives in a temp directory.
+    env: {
+      STIRILO_USERNAME: "admin",
+      STIRILO_PASSWORD_HASH:
+        "$argon2id$v=19$m=19456,t=2,p=1$qKWdXixdua4QKEitnLkzEw$YnREw1dDBlBTwIhdoLm0AKnXcXAFrKwUFHkXAInSWXs",
+      STIRILO_SESSION_SECRET: "e2e-only-session-secret-value",
+      STIRILO_DB_PATH: "/tmp/stirilo-e2e/test.db",
+    },
   },
 });

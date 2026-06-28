@@ -36,10 +36,10 @@ pnpm dev               # starts the app on http://localhost:3157
 
 ### Generating a password hash
 
-v0.1 uses a single local user. Generate the SHA-256 hash for `STIRILO_PASSWORD_SHA256`:
+v0.1 uses a single local user with an argon2id password hash. Generate the value for `STIRILO_PASSWORD_HASH` (the password is read from stdin, never passed on the command line):
 
 ```bash
-read -s -p "Password: " password; echo; printf "%s" "$password" | sha256sum | awk '{print $1}'; unset password
+read -s -p "Password: " password; echo; printf "%s" "$password" | pnpm hash:password; unset password
 ```
 
 ## Configuration
@@ -51,7 +51,7 @@ Copy `.env.example` to `.env`. Key variables:
 | `STIRILO_BIND_HOST` | Bind address (default `127.0.0.1`) |
 | `STIRILO_PORT` | Port (default `3157`) |
 | `STIRILO_USERNAME` | Login username |
-| `STIRILO_PASSWORD_SHA256` | SHA-256 of the login password |
+| `STIRILO_PASSWORD_HASH` | argon2id hash of the login password |
 | `STIRILO_SESSION_SECRET` | Session signing secret |
 | `STIRILO_DB_PATH` | SQLite path (default `./data/stirilo.dev.db`) |
 | `STIRILO_AGENT_TOKEN` | Token for the HTTP API |

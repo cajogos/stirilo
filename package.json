@@ -9,12 +9,13 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev": "pnpm --filter @stirilo/web dev",
+    "dev": "tsc -b && pnpm --filter @stirilo/web dev",
     "build": "tsc -b && pnpm --filter @stirilo/web build",
     "typecheck": "tsc -b && pnpm --filter @stirilo/web typecheck",
     "lint": "eslint .",
     "test": "vitest run",
-    "test:e2e": "pnpm --filter @stirilo/web test:e2e",
+    "test:e2e": "tsc -b && pnpm --filter @stirilo/web test:e2e",
+    "hash:password": "pnpm --filter @stirilo/auth hash:password",
     "db:generate": "pnpm --filter @stirilo/db db:generate",
     "db:migrate": "pnpm --filter @stirilo/db db:migrate",
     "db:studio": "pnpm --filter @stirilo/db db:studio",

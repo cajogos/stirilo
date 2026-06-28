@@ -4,9 +4,12 @@ title = "Stirilo gitleaks configuration"
 [extend]
 useDefault = true
 
-# The committed example carries placeholders only, never real values.
+# Allowlist files that intentionally contain placeholder or fixture values.
 [allowlist]
-description = "Ignore the environment example template"
+description = "Templates and test fixtures with non-secret placeholder values"
 paths = [
+  # The committed example carries placeholders only, never real values.
   '''\.env\.example$''',
+  # The redaction test file holds deliberately secret-shaped fixtures.
+  '''packages/redaction/src/redact\.test\.ts$''',
 ]

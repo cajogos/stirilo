@@ -8,6 +8,13 @@
       "when": 1782663832419,
       "tag": "0000_dry_karnak",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1782664542571,
+      "tag": "0001_left_angel",
+      "breakpoints": true
     }
   ]
 }

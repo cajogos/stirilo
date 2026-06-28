@@ -1,15 +1,16 @@
 import "server-only";
 import { cookies } from "next/headers";
+import { validateSession } from "@stirilo/auth";
 import { SESSION_COOKIE } from "@/lib/auth-constants";
+import { getDb } from "@/server/db";
 
 export interface Session
 {
   username: string;
 }
 
-// Phase 1 seam: a session simply means the cookie is present. Phase 2b replaces
-// the body of this function with real server-side session validation against the
-// database, without changing the call sites.
+// Authoritative server-side session check: the cookie token is validated against
+// the database (existence + expiry), not merely its presence.
 export async function getCurrentSession(): Promise<Session | null>
 {
   const store = await cookies();
@@ -19,5 +20,6 @@ export async function getCurrentSession(): Promise<Session | null>
     return null;
   }
 
-  return { username: "admin" };
+  const active = validateSession(getDb(), token);
+  return active ? { username: active.username } : null;
 }

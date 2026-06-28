@@ -7,9 +7,11 @@ export const configSchema = z.object({
   STIRILO_BIND_HOST: z.string().min(1).default("127.0.0.1"),
   STIRILO_PORT: z.coerce.number().int().positive().max(65535).default(3157),
   STIRILO_DB_PATH: z.string().min(1).default("./data/stirilo.dev.db"),
-  STIRILO_USERNAME: z.string().min(1).optional(),
-  STIRILO_PASSWORD_HASH: z.string().min(1).optional(),
-  STIRILO_SESSION_SECRET: z.string().min(16).optional(),
+  STIRILO_USERNAME: z.string().min(1, "STIRILO_USERNAME is required"),
+  STIRILO_PASSWORD_HASH: z.string().min(1, "STIRILO_PASSWORD_HASH is required"),
+  STIRILO_SESSION_SECRET: z
+    .string()
+    .min(16, "STIRILO_SESSION_SECRET must be at least 16 characters"),
   STIRILO_AGENT_TOKEN: z.string().min(1).optional(),
 });
 

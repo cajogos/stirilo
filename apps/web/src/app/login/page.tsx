@@ -8,8 +8,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function LoginPage()
+interface LoginPageProps
 {
+  searchParams: Promise<{ error?: string }>;
+}
+
+export default async function LoginPage({ searchParams }: LoginPageProps)
+{
+  const { error } = await searchParams;
+
   return (
     <main className="flex min-h-screen items-center justify-center p-6">
       <Card className="w-full max-w-sm">
@@ -20,6 +27,11 @@ export default function LoginPage()
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {error ? (
+            <p className="mb-4 rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+              Invalid username or password.
+            </p>
+          ) : null}
           <form action={login} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
               <label htmlFor="username" className="text-sm font-medium">

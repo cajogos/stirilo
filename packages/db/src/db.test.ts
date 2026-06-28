@@ -1,7 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { eq } from "drizzle-orm";
 import { createInMemoryDatabase } from "./client.js";
-import { settings } from "./schema.js";
+import { recordAudit } from "./audit.js";
+import { auditLog, settings } from "./schema.js";
 
 describe("database", () =>
 {
@@ -28,5 +29,18 @@ describe("database", () =>
     expect(() =>
       db.insert(settings).values({ key: "k", value: "2" }).run(),
     ).toThrow();
+  });
+
+  it("records audit entries with id and timestamp", () =>
+  {
+    const { db } = createInMemoryDatabase();
+    recordAudit(db, { actor: "admin", action: "login_success" });
+
+    const rows = db.select().from(auditLog).all();
+    expect(rows).toHaveLength(1);
+    expect(rows[0]?.actor).toBe("admin");
+    expect(rows[0]?.action).toBe("login_success");
+    expect(rows[0]?.id).toBeTruthy();
+    expect(rows[0]?.createdAt).toBeTruthy();
   });
 });

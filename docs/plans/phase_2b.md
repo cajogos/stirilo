@@ -1,6 +1,6 @@
 # Phase 2b: Auth, Audit & Redaction
 
-**Status:** Not started
+**Status:** Done
 **Depends on:** Phase 2a
 **PRD reference:** Milestone 2 (split), Implementation Order steps 6-7
 
@@ -21,20 +21,20 @@ Single-user authentication with sessions and logout, an audit log, and the share
 
 ## Deliverables
 
-- [ ] `sessions`, `audit_log` tables
-- [ ] Single-user login flow
-- [ ] Session cookie + server-side session validation
-- [ ] Logout
-- [ ] Redaction package with deterministic `[REDACTED]` output
-- [ ] Phase 1 middleware now enforces real sessions
+- [x] `sessions`, `audit_log` tables
+- [x] Single-user login flow
+- [x] Session cookie + server-side session validation
+- [x] Logout
+- [x] Redaction package with deterministic `[REDACTED]` output
+- [x] Phase 1 middleware now enforces real sessions
 
 ## Acceptance criteria
 
-- [ ] User can log in with the configured username/password
-- [ ] Session persists through refresh
-- [ ] Logout clears the session
-- [ ] Audit log records login success/failure and logout
-- [ ] Tests cover auth (hash verification) and redaction
+- [x] User can log in with the configured username/password
+- [x] Session persists through refresh
+- [x] Logout clears the session
+- [x] Audit log records login success/failure and logout
+- [x] Tests cover auth (hash verification) and redaction
 
 ## Recommendations / Watch-outs
 
@@ -52,21 +52,21 @@ Single-user authentication with sessions and logout, an audit log, and the share
 
 ## Implementation Checklist
 
-1. [ ] Add the `sessions` and `audit_log` table schemas + migration
-2. [ ] Create `packages/redaction` with deterministic `[REDACTED]` output
-3. [ ] Create `packages/auth`: argon2id hasher behind a `PasswordHasher` interface
-4. [ ] Implement login (timing-safe), session creation (`crypto.randomBytes`, store hash), HTTP-only cookie
-5. [ ] Implement logout
-6. [ ] Wire the Phase 1 middleware to real server-side session validation
-7. [ ] Write audit entries for login success/failure and logout
-8. [ ] Tests: auth hash verification + redaction real-shaped fixtures (PAT/AWS/JWT/DB-URL)
+1. [x] Add the `sessions` and `audit_log` table schemas + migration
+2. [x] Create `packages/redaction` with deterministic `[REDACTED]` output
+3. [x] Create `packages/auth`: argon2id hasher behind a `PasswordHasher` interface
+4. [x] Implement login (timing-safe), session creation (`crypto.randomBytes`, store hash), HTTP-only cookie
+5. [x] Implement logout
+6. [x] Wire the Phase 1 middleware to real server-side session validation
+7. [x] Write audit entries for login success/failure and logout
+8. [x] Tests: auth hash verification + redaction real-shaped fixtures (PAT/AWS/JWT/DB-URL)
 
 ## Done
 
 Mark this phase complete only when all of the following hold:
 
-- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
-- [ ] **Verify:** `pnpm test` (auth + redaction) passes; manual login → refresh → logout works; audit log shows the events
-- [ ] `git status` + `git diff --staged` reviewed; no secrets or session data staged
-- [ ] This file's **Status** changed to `Done`
-- [ ] Committed locally, no push: `feat: Add single-user auth, audit log, and redaction`
+- [x] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [x] **Verify:** `pnpm test` (auth + redaction) passes; manual login → refresh → logout works; audit log shows the events
+- [x] `git status` + `git diff --staged` reviewed; no secrets or session data staged
+- [x] This file's **Status** changed to `Done`
+- [x] Committed locally, no push: `feat: Add single-user auth, audit log, and redaction`
