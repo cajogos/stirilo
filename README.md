@@ -30,13 +30,15 @@ pnpm workspace, Node.js 22+, TypeScript, Next.js, Tailwind CSS, shadcn/ui, SQLit
 
 ```bash
 pnpm install
-cp .env.example .env   # then fill in the values below
+pnpm setup             # configure username/password and write .env
 pnpm dev               # starts the app on http://localhost:3157
 ```
 
-### Generating a password hash
+### Setting up your login
 
-v0.1 uses a single local user with an argon2id password hash. Generate the value for `STIRILO_PASSWORD_HASH` (the password is read from stdin, never passed on the command line):
+`pnpm setup` is interactive: it prompts for a username and password, stores the password as an argon2id hash, generates a session secret, and writes everything to `.env` (creating it from `.env.example` if needed). Re-run it any time to change the credentials.
+
+If you prefer to edit `.env` by hand, copy `cp .env.example .env` and generate just the password hash for `STIRILO_PASSWORD_HASH` (read from stdin, never passed on the command line):
 
 ```bash
 read -s -p "Password: " password; echo; printf "%s" "$password" | pnpm hash:password; unset password
