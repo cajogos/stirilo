@@ -8,8 +8,10 @@ import {
   GitBranch,
   LayoutDashboard,
   HeartPulse,
+  Lightbulb,
   ScrollText,
   Settings,
+  ShieldAlert,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -24,6 +26,8 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/scan-targets", label: "Scan targets", icon: FolderSearch },
   { href: "/git", label: "Git", icon: GitBranch },
+  { href: "/sensitive", label: "Sensitive files", icon: ShieldAlert },
+  { href: "/insights", label: "Insights", icon: Lightbulb },
   { href: "/health", label: "Health", icon: HeartPulse },
   { href: "/audit-log", label: "Audit log", icon: ScrollText },
   { href: "/settings", label: "Settings", icon: Settings },

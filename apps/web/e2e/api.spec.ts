@@ -1,3 +1,6 @@
+import { mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { test, expect } from "@playwright/test";
 
 const TOKEN = "e2e-agent-token-value";
@@ -55,4 +58,48 @@ test("validates the create scan target body", async ({ request }) =>
   expect(res.status()).toBe(400);
   const body = await res.json();
   expect(body.error.code).toBe("VALIDATION_ERROR");
+});
+
+test("insights endpoints require the agent token", async ({ request }) =>
+{
+  const res = await request.get("/api/insights/sensitive");
+  expect(res.status()).toBe(401);
+});
+
+test("sensitive inventory lists a fixture .env by metadata only", async ({
+  request,
+}) =>
+{
+  // A private temp fixture (unique path) so this never collides with the UI
+  // scan test on the unique scan-target path. The server reads it off disk.
+  const dir = mkdtempSync(join(tmpdir(), "stirilo-insights-"));
+  writeFileSync(join(dir, "readme.txt"), "hello");
+  // Detection is by filename (.env); the content is a plain, non-secret-shaped
+  // sentinel we assert never appears in any API response.
+  const sentinel = "do-not-ingest-this-fixture-line";
+  writeFileSync(join(dir, ".env"), `${sentinel}\n`);
+
+  const created = await request.post("/api/scan-targets", {
+    headers: auth,
+    data: { name: `Insights ${Date.now()}`, path: dir, confirm: true },
+  });
+  expect(created.status()).toBe(201);
+  const { id } = await created.json();
+
+  const scan = await request.post(`/api/scan-targets/${id}/scan`, {
+    headers: auth,
+  });
+  expect(scan.ok()).toBeTruthy();
+
+  const res = await request.get("/api/insights/sensitive", { headers: auth });
+  expect(res.ok()).toBeTruthy();
+  const text = await res.text();
+
+  // The .env marker is detected (metadata), but its contents never leak.
+  const body = JSON.parse(text) as {
+    sensitive: { byRule: { rule: string }[] };
+  };
+  expect(body.sensitive.byRule.some((r) => r.rule === "env-file")).toBeTruthy();
+  expect(text).not.toContain(sentinel);
+  expect(text).not.toContain("e2e-agent-token-value");
 });

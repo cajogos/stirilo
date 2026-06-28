@@ -10,6 +10,7 @@ export default tseslint.config(
       "**/dist/**",
       "**/build/**",
       "**/.next/**",
+      "**/.next-verify/**",
       "**/coverage/**",
       "**/*.tsbuildinfo",
       "**/next-env.d.ts",

@@ -69,4 +69,69 @@ describe("scanDirectory", () =>
     // The headline guarantee: the secret value never enters the result.
     expect(JSON.stringify(result)).not.toContain(SECRET_SENTINEL);
   });
+
+  it("measures reclaimable space for ignored artifact directories", async () =>
+  {
+    const result = await scanDirectory(fixture());
+    const nm = result.artifactDirectories.find((d) => d.name === "node_modules");
+    expect(nm).toBeDefined();
+    expect(nm?.size).toBeGreaterThan(0);
+    expect(result.reclaimableBytes).toBeGreaterThanOrEqual(nm?.size ?? 0);
+    // The pruned file names must still never appear.
+    expect(JSON.stringify(result)).not.toContain("junk.js");
+  });
+
+  it("ranks largest directories and reports stale files", async () =>
+  {
+    const result = await scanDirectory(fixture());
+    expect(result.largestDirectories.some((d) => d.path === "src")).toBe(true);
+    expect(result.staleFiles.length).toBeGreaterThan(0);
+  });
+});
+
+describe("scanDirectory duplicate detection", () =>
+{
+  function dupFixture(): string
+  {
+    const root = mkdtempSync(join(tmpdir(), "stirilo-dup-"));
+    dirs.push(root);
+    mkdirSync(join(root, "a"));
+    mkdirSync(join(root, "b"));
+    // Same name + same size in two places -> a duplicate candidate.
+    writeFileSync(join(root, "a", "logo.png"), "PNGDATA-1234");
+    writeFileSync(join(root, "b", "logo.png"), "PNGDATA-5678");
+    // A unique file (no match) must not be grouped.
+    writeFileSync(join(root, "unique.txt"), "only-one");
+    // A sensitive duplicate must NOT be grouped (excluded by design).
+    writeFileSync(join(root, "a", ".env"), "AAAA");
+    writeFileSync(join(root, "b", ".env"), "BBBB");
+    return root;
+  }
+
+  it("groups non-sensitive files by size and name, excluding sensitive files", async () =>
+  {
+    const result = await scanDirectory(dupFixture());
+
+    const logo = result.potentialDuplicates.find((g) => g.name === "logo.png");
+    expect(logo).toBeDefined();
+    expect(logo?.count).toBe(2);
+    expect(logo?.wastedBytes).toBe(logo?.size);
+
+    // .env files are sensitive and must never appear as a duplicate group.
+    expect(result.potentialDuplicates.some((g) => g.name === ".env")).toBe(
+      false,
+    );
+    // Unique files are not grouped.
+    expect(
+      result.potentialDuplicates.some((g) => g.name === "unique.txt"),
+    ).toBe(false);
+  });
+
+  it("can be disabled via options", async () =>
+  {
+    const result = await scanDirectory(dupFixture(), {
+      detectDuplicates: false,
+    });
+    expect(result.potentialDuplicates).toEqual([]);
+  });
 });

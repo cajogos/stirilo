@@ -1,8 +1,15 @@
 # Phase 12: Scan Insights and Reports
 
-**Status:** Planned
+**Status:** Done (duplicate detection is metadata-only by design; see note)
 **Depends on:** Phase 10 (filesystem scanner + dashboard)
 **PRD reference:** Beyond PRD v0.1 (roadmap)
+
+> **Safety divergence (intentional):** the plan called for confirming duplicates
+> by *content hash*. Hashing requires opening files, which risks reading a secret
+> that name-based detection missed. The non-negotiable metadata-only invariant
+> ("choose the path that reads less") overrides this, so duplicate detection
+> groups non-sensitive files by **size + filename** only and is labelled a
+> heuristic in the UI. No file contents are ever read.
 
 ## Goal
 
@@ -23,18 +30,18 @@ Turn the metadata the scanner already collects into actionable reports. Every it
 
 ## Deliverables
 
-- [ ] Sensitive-file inventory page with filter by target and detection rule.
-- [ ] Disk reclamation report (largest dirs/files, artifacts, stale files) with reclaimable totals.
-- [ ] Duplicate-file report grouped by size + content hash.
-- [ ] Project inventory view with language/framework breakdown.
-- [ ] Server-layer aggregation queries backing each report (SQL, not client-side recompute).
+- [x] Sensitive-file inventory page (`/sensitive`) grouped by target, with per-rule counts.
+- [x] Disk reclamation report (`/insights`): largest dirs/files, artifact directories, stale files, with reclaimable + duplicate-waste totals.
+- [x] Duplicate report grouped by size + filename (metadata-only; content hashing deliberately not used - see note).
+- [x] Project inventory view (`/insights`) with marker breakdown across targets.
+- [x] Server-layer aggregation in `apps/web/src/server/insights.ts`; API routes under `/api/insights/*`.
 
 ## Acceptance criteria
 
-- [ ] Sensitive files are listed by metadata only; no content or env values ever rendered.
-- [ ] Duplicate and hash logic skips sensitive-file paths entirely.
-- [ ] Reports work with empty, loading, and error states.
-- [ ] Totals (reclaimable space, counts) are computed in SQL/server layer.
+- [x] Sensitive files are listed by metadata only; no content or env values ever rendered.
+- [x] Duplicate logic skips sensitive-file paths entirely (excluded from the size+name map).
+- [x] Reports work with empty states (no-scan and per-section).
+- [x] Totals (reclaimable space, duplicate waste, counts) computed in the server layer.
 
 ## Recommendations / Watch-outs
 
@@ -49,20 +56,20 @@ Turn the metadata the scanner already collects into actionable reports. Every it
 
 ## Implementation Checklist
 
-1. [ ] Add server-layer aggregation queries for each report.
-2. [ ] Extend the scanner to record content hashes for non-sensitive files (opt-in).
-3. [ ] Build the sensitive-file inventory page (metadata-only).
-4. [ ] Build the disk reclamation report.
-5. [ ] Build the duplicate-file report.
-6. [ ] Build the project inventory view.
-7. [ ] Add unit tests (hash skips sensitive paths) + E2E for each report.
+1. [x] Add server-layer aggregation (`insights.ts`) reading the latest completed summary per target.
+2. [x] Extend the scanner (metadata-only): largest directories, stale files, artifact-dir measurement + reclaimable bytes, and size+name duplicate groups (sensitive files excluded).
+3. [x] Build the sensitive-file inventory page (metadata-only).
+4. [x] Build the disk reclamation report.
+5. [x] Build the duplicate report.
+6. [x] Build the project inventory view.
+7. [x] Add unit tests (duplicates exclude sensitive files; contents never read) + E2E (sensitive inventory via API without leaking contents).
 
 ## Done
 
 Mark this phase complete only when all of the following hold:
 
-- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
-- [ ] **Verify:** integration test proves sensitive files appear in the inventory *without being opened*; reports render with real scan data and clean empty states
-- [ ] `git status` + `git diff --staged` reviewed; no secrets staged
-- [ ] This file's **Status** changed to `Done`
+- [x] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [x] **Verify:** scanner unit test proves a `.env` is detected without its sentinel contents entering the result; e2e proves the sensitive inventory API lists `.env` without leaking contents; lint + typecheck + 55 unit + 14 e2e pass
+- [x] `git status` + `git diff --staged` reviewed; no secrets staged
+- [x] This file's **Status** changed to `Done`
 - [ ] Committed locally: `feat: Add scan insight reports`

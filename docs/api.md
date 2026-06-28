@@ -40,6 +40,10 @@ All errors use a stable envelope:
 | GET | `/api/git/repos` | List detected Git repositories with latest status. |
 | GET | `/api/git/repos/{id}` | Get a Git repository. |
 | GET | `/api/git/repos/{id}/status` | Get a repository's latest status snapshot. |
+| GET | `/api/insights/sensitive` | Sensitive-file inventory (metadata only) across latest scans. |
+| GET | `/api/insights/disk` | Disk reclamation report: largest files/dirs, artifacts, stale. |
+| GET | `/api/insights/duplicates` | Potential duplicate files (grouped by size and name). |
+| GET | `/api/insights/projects` | Project/framework inventory across scanned targets. |
 | GET | `/api/audit-log` | Recent audit entries. |
 
 ## Request bodies
