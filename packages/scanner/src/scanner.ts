@@ -46,6 +46,9 @@ export interface ScanOptions
 {
   ignoredDirectories?: ReadonlySet<string>;
   topN?: number;
+  // Called periodically with the running file count, for progress reporting.
+  onProgress?: (fileCount: number) => void;
+  progressEvery?: number;
 }
 
 export async function scanDirectory(
@@ -55,6 +58,7 @@ export async function scanDirectory(
 {
   const ignored = options.ignoredDirectories ?? DEFAULT_IGNORED_DIRECTORIES;
   const topN = options.topN ?? 10;
+  const progressEvery = options.progressEvery ?? 1000;
   const start = Date.now();
 
   let fileCount = 0;
@@ -113,6 +117,10 @@ export async function scanDirectory(
       if (entry.isFile())
       {
         totalSize += stats.size;
+      }
+      if (options.onProgress && fileCount % progressEvery === 0)
+      {
+        options.onProgress(fileCount);
       }
 
       const relPath = relative(root, full);

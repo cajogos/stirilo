@@ -228,7 +228,10 @@ export async function getGitStatus(repoPath: string): Promise<GitStatus>
 // Find Git repositories under a root directory, including repositories nested
 // inside other repositories. Descends into found repos (skipping their `.git`
 // directory and ignored directories); symlinks are not followed.
-export async function findRepositories(root: string): Promise<GitRepository[]>
+export async function findRepositories(
+  root: string,
+  onRepo?: (repo: GitRepository) => void,
+): Promise<GitRepository[]>
 {
   const repos: GitRepository[] = [];
 
@@ -236,11 +239,13 @@ export async function findRepositories(root: string): Promise<GitRepository[]>
   {
     if (await isRepository(dir))
     {
-      repos.push({
+      const repo: GitRepository = {
         path: dir,
         sizeBytes: await directorySize(dir),
         status: await getGitStatus(dir),
-      });
+      };
+      repos.push(repo);
+      onRepo?.(repo);
       // Keep descending to find nested repositories.
     }
 

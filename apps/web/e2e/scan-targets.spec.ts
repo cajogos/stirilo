@@ -52,6 +52,12 @@ test("runs a scan and shows the metadata summary", async ({ page }) =>
   await page.getByRole("link", { name: "Temp" }).click();
   await page.getByRole("button", { name: "Run scan" }).click();
 
+  // Live toasts: the fixture is a git repo, so a "Repository found" toast and a
+  // completion toast should appear during the streamed scan.
+  await expect(page.getByText("Repository found")).toBeVisible({
+    timeout: 20_000,
+  });
+
   await expect(page.getByText("Latest scan")).toBeVisible({ timeout: 20_000 });
   // The detected .env in the fixture should surface as a sensitive marker.
   await expect(page.getByText(/Sensitive markers/)).toBeVisible();

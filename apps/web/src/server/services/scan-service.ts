@@ -17,13 +17,27 @@ export type ExecuteScanResult =
   | { ok: true; runId: string; status: "completed" | "failed" }
   | { ok: false; code: "NOT_FOUND"; message: string };
 
+export type ScanEvent =
+  | { type: "progress"; files: number }
+  | { type: "repo"; path: string }
+  | { type: "done"; files: number; directories: number; sensitive: number; repos: number }
+  | { type: "error"; message: string };
+
+export type ScanEventHandler = (event: ScanEvent) => void;
+
 async function detectGitRepositories(
   db: ReturnType<typeof getDb>,
   targetId: string,
   rootPath: string,
-): Promise<void>
+  onEvent?: ScanEventHandler,
+): Promise<number>
 {
-  const repos = await findRepositories(rootPath);
+  let count = 0;
+  const repos = await findRepositories(rootPath, (repo) =>
+  {
+    count += 1;
+    onEvent?.({ type: "repo", path: repo.path });
+  });
   for (const repo of repos)
   {
     const now = new Date().toISOString();
@@ -82,13 +96,17 @@ async function detectGitRepositories(
       })
       .run();
   }
+
+  return count;
 }
 
 // Shared scan execution used by the UI action and the HTTP API. Performs the
 // filesystem scan, best-effort git detection, persistence, and auditing.
+// When onEvent is provided, progress/repo/done events are emitted for streaming.
 export async function executeScan(
   actor: string,
   targetId: string,
+  onEvent?: ScanEventHandler,
 ): Promise<ExecuteScanResult>
 {
   const db = getDb();
@@ -100,6 +118,7 @@ export async function executeScan(
 
   if (!target)
   {
+    onEvent?.({ type: "error", message: "Scan target not found." });
     return { ok: false, code: "NOT_FOUND", message: "Scan target not found." };
   }
 
@@ -115,7 +134,9 @@ export async function executeScan(
 
   try
   {
-    const result = await scanDirectory(target.path);
+    const result = await scanDirectory(target.path, {
+      onProgress: (files) => onEvent?.({ type: "progress", files }),
+    });
     const summaryJson = redact(JSON.stringify(result));
     db.insert(scanRuns)
       .values({
@@ -136,9 +157,10 @@ export async function executeScan(
       .where(eq(scanTargets.id, targetId))
       .run();
 
+    let repoCount = 0;
     try
     {
-      await detectGitRepositories(db, targetId, target.path);
+      repoCount = await detectGitRepositories(db, targetId, target.path, onEvent);
     }
     catch
     {
@@ -154,6 +176,13 @@ export async function executeScan(
         files: result.fileCount,
         sensitive: result.sensitiveMarkers.length,
       },
+    });
+    onEvent?.({
+      type: "done",
+      files: result.fileCount,
+      directories: result.directoryCount,
+      sensitive: result.sensitiveMarkers.length,
+      repos: repoCount,
     });
     return { ok: true, runId: id, status: "completed" };
   }
@@ -183,6 +212,7 @@ export async function executeScan(
       targetType: "scan_target",
       targetId,
     });
+    onEvent?.({ type: "error", message: "Scan failed." });
     return { ok: true, runId: id, status: "failed" };
   }
 }

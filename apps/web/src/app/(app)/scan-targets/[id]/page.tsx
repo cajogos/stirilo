@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getScanTargetById } from "@/server/scan-targets";
 import { getLatestScanRunForTarget, parseSummary } from "@/server/scans";
-import { runScan } from "@/server/scan-run-actions";
 import { ScanRunButton } from "@/components/scan-run-button";
 import {
   Card,
@@ -59,10 +58,7 @@ export default async function ScanTargetDetailPage({
             {target.name}
           </h1>
         </div>
-        <form action={runScan}>
-          <input type="hidden" name="targetId" value={target.id} />
-          <ScanRunButton />
-        </form>
+        <ScanRunButton targetId={target.id} />
       </div>
 
       <Card>
