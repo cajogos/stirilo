@@ -8,6 +8,13 @@ build/
 .next/
 out/
 *.tsbuildinfo
+next-env.d.ts.timestamp
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+blob-report/
 
 # Coverage / test artefacts
 coverage/

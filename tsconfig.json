@@ -9,7 +9,6 @@
     { "path": "./packages/git" },
     { "path": "./packages/scanner" },
     { "path": "./packages/mcp" },
-    { "path": "./packages/command-runner" },
-    { "path": "./apps/web" }
+    { "path": "./packages/command-runner" }
   ]
 }

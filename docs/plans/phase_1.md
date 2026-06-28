@@ -1,6 +1,6 @@
 # Phase 1: Web App Shell
 
-**Status:** Not started
+**Status:** Done
 **Depends on:** Phase 0
 **PRD reference:** Milestone 1, Implementation Order steps 2-3
 
@@ -26,20 +26,20 @@ A running Next.js application with the visual shell in place: layout, navigation
 
 ## Deliverables
 
-- [ ] Next.js app boots via `pnpm dev` on the configured port
-- [ ] Tailwind + shadcn/ui + dark mode wired up
-- [ ] Dashboard layout: sidebar, top bar, content area
-- [ ] Reusable UI primitives: cards, tables, empty/error/loading states
-- [ ] Login, dashboard shell, settings, health pages (static/placeholder)
-- [ ] Basic Playwright smoke test
+- [x] Next.js app boots via `pnpm dev` on the configured port
+- [x] Tailwind + shadcn/ui + dark mode wired up
+- [x] Dashboard layout: sidebar, top bar, content area
+- [x] Reusable UI primitives: cards, tables, empty/error/loading states
+- [x] Login, dashboard shell, settings, health pages (static/placeholder)
+- [x] Basic Playwright smoke test
 
 ## Acceptance criteria
 
-- [ ] `pnpm dev` starts the web app
-- [ ] Homepage redirects to `/login` when unauthenticated
-- [ ] Login page renders
-- [ ] Dashboard renders after (stubbed) login
-- [ ] Basic Playwright smoke test passes
+- [x] `pnpm dev` starts the web app
+- [x] Homepage redirects to `/login` when unauthenticated
+- [x] Login page renders
+- [x] Dashboard renders after (stubbed) login
+- [x] Basic Playwright smoke test passes
 
 ## Recommendations / Watch-outs
 
@@ -54,22 +54,22 @@ A running Next.js application with the visual shell in place: layout, navigation
 
 ## Implementation Checklist
 
-1. [ ] Create the Next.js app (App Router) in `apps/web/`
-2. [ ] Configure the dev server to run on port 3157
-3. [ ] Add Tailwind CSS
-4. [ ] Add shadcn/ui + lucide-react; wire `next-themes` for dark mode
-5. [ ] Build the dashboard layout: sidebar, top bar, content area, status indicators
-6. [ ] Add reusable UI primitives: card, table, empty/error/loading states
-7. [ ] Add placeholder pages: `/login`, `/dashboard`, `/settings`, `/health`
-8. [ ] Add Next.js middleware redirecting unauthenticated users to `/login` (swappable stub seam)
-9. [ ] Add a basic Playwright smoke test
+1. [x] Create the Next.js app (App Router) in `apps/web/`
+2. [x] Configure the dev server to run on port 3157
+3. [x] Add Tailwind CSS
+4. [x] Add shadcn/ui + lucide-react; wire `next-themes` for dark mode
+5. [x] Build the dashboard layout: sidebar, top bar, content area, status indicators
+6. [x] Add reusable UI primitives: card, table, empty/error/loading states
+7. [x] Add placeholder pages: `/login`, `/dashboard`, `/settings`, `/health`
+8. [x] Add Next.js middleware redirecting unauthenticated users to `/login` (swappable stub seam)
+9. [x] Add a basic Playwright smoke test
 
 ## Done
 
 Mark this phase complete only when all of the following hold:
 
-- [ ] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
-- [ ] **Verify:** `pnpm dev` serves on `127.0.0.1:3157` and redirects to `/login`; `pnpm test:e2e` smoke test passes
-- [ ] `git status` + `git diff --staged` reviewed; no secrets staged
-- [ ] This file's **Status** changed to `Done`
-- [ ] Committed locally, no push: `feat: Add Next.js web app shell`
+- [x] Every box in **Deliverables**, **Implementation Checklist**, and **Acceptance criteria** is checked
+- [x] **Verify:** `pnpm dev` serves on `127.0.0.1:3157` and redirects to `/login`; `pnpm test:e2e` smoke test passes
+- [x] `git status` + `git diff --staged` reviewed; no secrets staged
+- [x] This file's **Status** changed to `Done`
+- [x] Committed locally, no push: `feat: Add Next.js web app shell`

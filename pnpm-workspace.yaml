@@ -6,7 +6,9 @@ packages:
 onlyBuiltDependencies:
   - esbuild
   - lefthook
+  - sharp
 
 allowBuilds:
   esbuild: true
   lefthook: true
+  sharp: true
